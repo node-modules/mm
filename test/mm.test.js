@@ -13,8 +13,27 @@
 var mm = require('../');
 var fs = require('fs');
 var should = require('should');
+var http = require('http');
+var pedding = require('pedding');
+
 
 describe('mm.test.js', function () {
+
+  var port = null;
+
+  before(function (done) {
+    var app = http.createServer(function (req, res) {
+      res.end(req.method + ' ' + req.url);
+    });
+    app.listen(0, function () {
+      port = app.address().port;
+      done();
+    });
+  });
+
+  afterEach(function () {
+    mm.restore();
+  });
   
   describe('error()', function () {
     it('should mock fs.readFile return error', function (done) {
@@ -64,6 +83,174 @@ describe('mm.test.js', function () {
       });
     });
 
+  });
+
+  describe('http.request()', function () {
+    it('should mock http.request() response', function (done) {
+      done = pedding(2, done);
+
+      var mockURL = '/foo';
+      var mockResData = 'mock data';
+      var mockResHeaders = { server: 'mock server' };
+      mm.http.request(mockURL, mockResData, mockResHeaders);
+
+      http.get({
+        host: '127.0.0.1',
+        port: port,
+        path: '/foo'
+      }, function (res) {
+        res.headers.should.eql(mockResHeaders);
+        var body = '';
+        res.on('data', function (chunk) {
+          body += chunk.toString();
+        });
+        res.on('end', function () {
+          body.should.equal(mockResData);
+          done();
+        });
+      });
+
+      // not match /foo
+      http.get({
+        host: '127.0.0.1',
+        port: port,
+        path: '/'
+      }, function (res) {
+        res.headers.should.not.eql(mockResHeaders);
+        var body = '';
+        res.on('data', function (chunk) {
+          body += chunk.toString();
+        });
+        res.on('end', function () {
+          body.should.not.equal(mockResData);
+          done();
+        });
+      });
+
+    });
+
+    it('should mock http.request() response with regex url', function (done) {
+      var mockURL = /foo$/;
+      var mockResData = 'mock data with regex url';
+      var mockResHeaders = { server: 'mock server' };
+      mm.http.request(mockURL, mockResData, mockResHeaders);
+
+      http.get({
+        host: 'cnodejs.org',
+        path: '/bar/foo'
+      }, function (res) {
+        res.headers.should.eql(mockResHeaders);
+        var body = '';
+        res.on('data', function (chunk) {
+          body += chunk.toString();
+        });
+        res.on('end', function () {
+          body.should.equal(mockResData);
+          done();
+        });
+      });
+    });
+
+    it('should mock http.request() 500ms response delay', function (done) {
+      var mockURL = /foo$/;
+      var mockResData = 'mock data with regex url';
+      var mockResHeaders = { server: 'mock server' };
+      mm.http.request(mockURL, mockResData, mockResHeaders, 500);
+
+      var start = Date.now();
+      http.get({
+        host: 'cnodejs.org',
+        path: '/bar/foo'
+      }, function (res) {
+        res.headers.should.eql(mockResHeaders);
+        var body = '';
+        res.on('data', function (chunk) {
+          body += chunk.toString();
+        });
+        res.on('end', function () {
+          var use = Date.now() - start;
+          body.should.equal(mockResData);
+          use.should.above(490);
+          done();
+        });
+      });
+    });
+
+  });
+
+  describe('http.requestError', function () {
+    it('should http.reqeust() return req error', function (done) {
+      done = pedding(2, done);
+
+      var mockURL = '/req';
+      var reqError = 'mock req error';
+      mm.http.requestError(mockURL, reqError);
+
+      var req = http.get({
+        path: '/req'
+      }, function (res) {
+        done(new Error('should not call this'));
+      });
+      req.on('error', function (err) {
+        should.exist(err);
+        err.name.should.equal('MockHttpRequestError');
+        err.message.should.equal('mock req error');
+        done();
+      });
+
+      // not match
+      var req = http.get({
+        host: '127.0.0.1',
+        port: port,
+        path: '/req_not_match'
+      }, function (res) {
+        var body = '';
+        res.on('data', function (chunk) {
+          body += chunk.toString();
+        });
+        res.on('end', function () {
+          body.should.equal('GET /req_not_match');
+          done();
+        });
+      });
+    });
+
+    it('should http.reqeust() return res error', function (done) {
+      var mockURL = '/res';
+      var resError = 'mock res error';
+      mm.http.requestError(mockURL, null, resError);
+
+      http.get({
+        path: '/res'
+      }, function (res) {
+        res.on('error', function (err) {
+          should.exist(err);
+          err.name.should.equal('MockHttpResponseError');
+          err.message.should.equal('mock res error');
+          done();
+        });
+      });
+    });
+
+    it('should http.reqeust() return res error 500ms delay', function (done) {
+      var mockURL = '/res';
+      var resError = 'mock res error';
+      mm.http.requestError(mockURL, null, resError, 500);
+
+      var start = Date.now();
+      http.get({
+        path: '/res'
+      }, function (res) {
+        res.on('error', function (err) {
+          should.exist(err);
+          err.name.should.equal('MockHttpResponseError');
+          err.message.should.equal('mock res error');
+          var use = Date.now() - start;
+          use.should.above(490);
+          done();
+        });
+      });
+    });
   });
 
 });

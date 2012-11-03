@@ -1,4 +1,4 @@
-mm (Mock伴侣) [![Build Status](https://secure.travis-ci.org/fengmk2/mm.png)](http://travis-ci.org/fengmk2/mm)
+mm (美眉，Mock伴侣) [![Build Status](https://secure.travis-ci.org/fengmk2/mm.png)](http://travis-ci.org/fengmk2/mm)
 =======
 
 ![logo](https://raw.github.com/fengmk2/mm/master/logo.png)
@@ -39,6 +39,26 @@ http.get({
   res.on('end', function () {
     console.log(body); // should equal 'mock data'
   });
+});
+```
+
+### Mock `http.request()` error
+
+```js
+var mm = require('mm');
+var http = require('http');
+
+var mockURL = '/foo';
+var reqError = null;
+var resError = 'mock res error';
+mm.http.requestError(mockURL, reqError, resError);
+
+http.get({
+  path: '/foo'
+}, function (res) {
+  res.on('error', function (err) {
+    console.log(err); // should return mock err: err.name === 'MockHttpResponseError'
+  }
 });
 ```
 
