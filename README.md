@@ -1,7 +1,7 @@
 mm (美眉，Mock伴侣) [![Build Status](https://secure.travis-ci.org/fengmk2/mm.png)](http://travis-ci.org/fengmk2/mm)
 =======
 
-![logo](https://raw.github.com/fengmk2/mm/master/logo.png)
+![logo](https://raw.github.com/fengmk2/mm/master/logo.gif)
 
 mock mate, easy to mock `http` request, `fs` access and so on.
 
