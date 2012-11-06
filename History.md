@@ -1,4 +1,10 @@
 
+0.0.2 / 2012-11-06 
+==================
+
+  * when mock response error, must emit `req` error not `res` error event.
+  * replace logo
+
 0.0.1 / 2012-11-04 
 ==================
 
