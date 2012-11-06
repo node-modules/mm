@@ -176,6 +176,62 @@ describe('mm.test.js', function () {
       });
     });
 
+    it('should mock http.request() 500ms response delay and req.abort()', function (done) {
+      var mockURL = /foo$/;
+      var mockResData = 'mock data with regex url';
+      var mockResHeaders = { server: 'mock server' };
+      mm.http.request(mockURL, mockResData, mockResHeaders, 500);
+      done = pedding(2, done);
+
+      var start = Date.now();
+      var req = http.get({
+        host: 'cnodejs.org',
+        path: '/bar/foo'
+      }, function (res) {
+        res.headers.should.eql(mockResHeaders);
+        var body = '';
+        res.on('data', function (chunk) {
+          body += chunk.toString();
+        });
+        res.on('end', function () {
+          var use = Date.now() - start;
+          body.should.equal(mockResData);
+          use.should.above(490);
+          req.abort();
+          done();
+        });
+      });
+      req.on('error', function (err) {
+        should.exist(err);
+        err.message.should.equal('socket hang up');
+        done();
+      });
+    });
+
+    it('should mock http.request() 1000ms delay', function (done) {
+      var mockURL = /foo$/;
+      var mockResData = 'mock data with regex url';
+      var mockResHeaders = { server: 'mock server' };
+      mm.http.request(mockURL, mockResData, mockResHeaders, 1000);
+
+      var start = Date.now();
+      var req = http.get({
+        host: 'cnodejs.org',
+        path: '/bar/foo'
+      });
+      req.on('response', function (res) {
+        done(new Error('should not call this'));
+      });
+      req.on('error', function (err) {
+        should.exist(err);
+        err.message.should.equal('socket hang up');
+        done();
+      });
+      setTimeout(function () {
+        req.abort();
+      }, 100);
+    });
+
   });
 
   describe('http.requestError', function () {
@@ -250,7 +306,6 @@ describe('mm.test.js', function () {
         res.should.have.header('server', 'MockMateServer');
         done();
       });
-      
       req.on('error', function (err) {
         should.exist(err);
         err.name.should.equal('MockHttpResponseError');
@@ -260,6 +315,31 @@ describe('mm.test.js', function () {
         done();
       });
     });
+
+    it('should http.reqeust() not emit req error 1000ms delay after req.abort()', function (done) {
+      var mockURL = '/res';
+      var resError = 'mock res error with 500ms delay';
+      mm.http.requestError(mockURL, null, resError, 1000);
+
+      var start = Date.now();
+      var req = http.get({
+        path: '/res'
+      }, function (res) {
+        done(new Error('should not call this'));
+      });
+      req.on('error', function (err) {
+        should.exist(err);
+        err.name.should.equal('Error');
+        err.message.should.equal('socket hang up');
+        var use = Date.now() - start;
+        use.should.above(90);
+        done();
+      });
+      setTimeout(function () {
+        req.abort();
+      }, 100);
+    });
+
   });
 
 });
