@@ -53,13 +53,17 @@ var reqError = null;
 var resError = 'mock res error';
 mm.http.requestError(mockURL, reqError, resError);
 
-http.get({
+var req = http.get({
   path: '/foo'
 }, function (res) {
-  res.on('error', function (err) {
-    console.log(err); // should return mock err: err.name === 'MockHttpResponseError'
-  }
+  console.log(res.statusCode, res.headers); // 200 but never emit `end` event
+  res.on('end', fucntion () {
+    console.log('never show this message');
+  });
 });
+req.on('error', function (err) {
+  console.log(err); // should return mock err: err.name === 'MockHttpResponseError'
+}
 ```
 
 ### Mock async function callback error

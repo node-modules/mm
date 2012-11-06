@@ -215,40 +215,49 @@ describe('mm.test.js', function () {
       });
     });
 
-    it('should http.reqeust() return res error', function (done) {
+    it('should http.reqeust() return req error after response emit', function (done) {
       var mockURL = '/res';
       var resError = 'mock res error';
       mm.http.requestError(mockURL, null, resError);
+      done = pedding(2, done);
 
-      http.get({
+      var req = http.get({
         path: '/res'
       }, function (res) {
-        res.on('error', function (err) {
-          should.exist(err);
-          err.name.should.equal('MockHttpResponseError');
-          err.message.should.equal('mock res error');
-          done();
-        });
+        res.should.status(200);
+        res.should.have.header('server', 'MockMateServer');
+        done();
+      });
+      req.on('error', function (err) {
+        should.exist(err);
+        err.name.should.equal('MockHttpResponseError');
+        err.message.should.equal('mock res error');
+        done();
       });
     });
 
     it('should http.reqeust() return res error 500ms delay', function (done) {
       var mockURL = '/res';
-      var resError = 'mock res error';
+      var resError = 'mock res error with 500ms delay';
       mm.http.requestError(mockURL, null, resError, 500);
+      done = pedding(2, done);
 
       var start = Date.now();
-      http.get({
+      var req = http.get({
         path: '/res'
       }, function (res) {
-        res.on('error', function (err) {
-          should.exist(err);
-          err.name.should.equal('MockHttpResponseError');
-          err.message.should.equal('mock res error');
-          var use = Date.now() - start;
-          use.should.above(490);
-          done();
-        });
+        res.should.status(200);
+        res.should.have.header('server', 'MockMateServer');
+        done();
+      });
+      
+      req.on('error', function (err) {
+        should.exist(err);
+        err.name.should.equal('MockHttpResponseError');
+        err.message.should.equal('mock res error with 500ms delay');
+        var use = Date.now() - start;
+        use.should.above(490);
+        done();
       });
     });
   });
