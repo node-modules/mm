@@ -86,6 +86,17 @@ fs.readFile('/etc/hosts', 'utf8', function (err, content) {
 });
 ```
 
+### use `mm` just like [`muk`](https://github.com/fent/node-muk)
+
+```js
+var fs = require('fs');
+var mm = require('mm');
+
+mm(fs, 'readFile', function (path, callback) {
+  process.nextTick(callback.bind(null, null, 'file contents here'));
+});
+```
+
 ## License 
 
 (The MIT License)

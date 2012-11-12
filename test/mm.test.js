@@ -342,4 +342,26 @@ describe('mm.test.js', function () {
 
   });
 
+  describe('mm()', function () {
+    it('should mm() just like muk()', function (done) {
+      mm(fs, 'readFile', function (filename, callback) {
+        process.nextTick(function () {
+          callback(null, new Buffer('filename: ' + filename));
+        });
+      });
+      fs.readFile(__filename, function (err, data) {
+        should.not.exist(err);
+        data.should.be.an.instanceof(Buffer);
+        data.toString().should.equal('filename: ' + __filename);
+        mm.restore();
+        fs.readFile(__filename, function (err, data) {
+          should.not.exist(err);
+          data.should.be.an.instanceof(Buffer);
+          data.toString().should.include('mm()');
+          done();
+        });
+      });
+    });
+  });
+
 });
