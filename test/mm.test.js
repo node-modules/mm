@@ -10,23 +10,40 @@
  * Module dependencies.
  */
 
+var path = require('path');
 var mm = require('../');
 var fs = require('fs');
 var should = require('should');
 var http = require('http');
+var https = require('https');
 var pedding = require('pedding');
 
 
 describe('mm.test.js', function () {
 
   var port = null;
+  var sslPort = null;
 
   before(function (done) {
+    done = pedding(2, done);
+
     var app = http.createServer(function (req, res) {
       res.end(req.method + ' ' + req.url);
     });
     app.listen(0, function () {
       port = app.address().port;
+      done();
+    });
+
+    var fixtures = path.join(__dirname, 'fixtures');
+    var appssl = https.createServer({
+      key: fs.readFileSync(path.join(fixtures, 'test_key.pem')),
+      cert: fs.readFileSync(path.join(fixtures, 'test_cert.pem'))
+    }, function (req, res) {
+      res.end(req.method + ' ' + req.url);
+    });
+    appssl.listen(0, function () {
+      sslPort = appssl.address().port;
       done();
     });
   });
@@ -85,259 +102,271 @@ describe('mm.test.js', function () {
 
   });
 
-  describe('http.request()', function () {
-    it('should mock http.request() response', function (done) {
-      done = pedding(2, done);
+  describe('http(s).request()', function () {
+    ['http', 'https'].forEach(function (modName) {
+      var mod = modName === 'http' ? http : https;
 
-      var mockURL = '/foo';
-      var mockResData = 'mock data';
-      var mockResHeaders = { server: 'mock server' };
-      mm.http.request(mockURL, mockResData, mockResHeaders);
+      it('should mock ' + modName + '.request() response with string url', function (done) {
+        var modPort = modName === 'http' ? port : sslPort;
 
-      http.get({
-        host: '127.0.0.1',
-        port: port,
-        path: '/foo'
-      }, function (res) {
-        res.headers.should.eql(mockResHeaders);
-        var body = '';
-        res.on('data', function (chunk) {
-          body += chunk.toString();
+        done = pedding(2, done);
+
+        var mockURL = '/foo';
+        var mockResData = 'mock data';
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request(mockURL, mockResData, mockResHeaders);
+
+        mod.get({
+          host: '127.0.0.1',
+          port: modPort,
+          path: '/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          var body = '';
+          res.on('data', function (chunk) {
+            body += chunk.toString();
+          });
+          res.on('end', function () {
+            body.should.equal(mockResData);
+            done();
+          });
         });
-        res.on('end', function () {
-          body.should.equal(mockResData);
+
+        // not match /foo
+        mod.get({
+          host: '127.0.0.1',
+          port: modPort,
+          path: '/'
+        }, function (res) {
+          res.headers.should.not.eql(mockResHeaders);
+          var body = '';
+          res.on('data', function (chunk) {
+            body += chunk.toString();
+          });
+          res.on('end', function () {
+            body.should.not.equal(mockResData);
+            done();
+          });
+        });
+
+      });
+
+      it('should mock ' + modName + '.request() response with regex url', function (done) {
+        var mockURL = /foo$/;
+        var mockResData = 'mock data with regex url';
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request(mockURL, mockResData, mockResHeaders);
+
+        mod.get({
+          host: 'cnodejs.org',
+          path: '/bar/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          var body = '';
+          res.on('data', function (chunk) {
+            body += chunk.toString();
+          });
+          res.on('end', function () {
+            body.should.equal(mockResData);
+            done();
+          });
+        });
+      });
+
+      it('should mock ' + modName + '.request() 500ms response delay', function (done) {
+        var mockURL = /foo$/;
+        var mockResData = 'mock data with regex url';
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request(mockURL, mockResData, mockResHeaders, 500);
+
+        var start = Date.now();
+        mod.get({
+          host: 'cnodejs.org',
+          path: '/bar/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          var body = '';
+          res.on('data', function (chunk) {
+            body += chunk.toString();
+          });
+          res.on('end', function () {
+            var use = Date.now() - start;
+            body.should.equal(mockResData);
+            use.should.above(490);
+            done();
+          });
+        });
+      });
+
+      it('should mock ' + modName + '.request() 500ms response delay and req.abort()', function (done) {
+        var mockURL = /foo$/;
+        var mockResData = 'mock data with regex url';
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request(mockURL, mockResData, mockResHeaders, 500);
+        done = pedding(2, done);
+
+        var start = Date.now();
+        var req = mod.get({
+          host: 'cnodejs.org',
+          path: '/bar/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          var body = '';
+          res.on('data', function (chunk) {
+            body += chunk.toString();
+          });
+          res.on('end', function () {
+            var use = Date.now() - start;
+            body.should.equal(mockResData);
+            use.should.above(490);
+            req.abort();
+            done();
+          });
+        });
+        req.on('error', function (err) {
+          should.exist(err);
+          err.message.should.equal('socket hang up');
           done();
         });
       });
 
-      // not match /foo
-      http.get({
-        host: '127.0.0.1',
-        port: port,
-        path: '/'
-      }, function (res) {
-        res.headers.should.not.eql(mockResHeaders);
-        var body = '';
-        res.on('data', function (chunk) {
-          body += chunk.toString();
+      it('should mock ' + modName + '.request() 1000ms delay', function (done) {
+        var mockURL = /foo$/;
+        var mockResData = 'mock data with regex url';
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request(mockURL, mockResData, mockResHeaders, 1000);
+
+        var start = Date.now();
+        var req = mod.get({
+          host: 'cnodejs.org',
+          path: '/bar/foo'
         });
-        res.on('end', function () {
-          body.should.not.equal(mockResData);
+        req.on('response', function (res) {
+          done(new Error('should not call this'));
+        });
+        req.on('error', function (err) {
+          should.exist(err);
+          err.message.should.equal('socket hang up');
           done();
         });
-      });
-
-    });
-
-    it('should mock http.request() response with regex url', function (done) {
-      var mockURL = /foo$/;
-      var mockResData = 'mock data with regex url';
-      var mockResHeaders = { server: 'mock server' };
-      mm.http.request(mockURL, mockResData, mockResHeaders);
-
-      http.get({
-        host: 'cnodejs.org',
-        path: '/bar/foo'
-      }, function (res) {
-        res.headers.should.eql(mockResHeaders);
-        var body = '';
-        res.on('data', function (chunk) {
-          body += chunk.toString();
-        });
-        res.on('end', function () {
-          body.should.equal(mockResData);
-          done();
-        });
-      });
-    });
-
-    it('should mock http.request() 500ms response delay', function (done) {
-      var mockURL = /foo$/;
-      var mockResData = 'mock data with regex url';
-      var mockResHeaders = { server: 'mock server' };
-      mm.http.request(mockURL, mockResData, mockResHeaders, 500);
-
-      var start = Date.now();
-      http.get({
-        host: 'cnodejs.org',
-        path: '/bar/foo'
-      }, function (res) {
-        res.headers.should.eql(mockResHeaders);
-        var body = '';
-        res.on('data', function (chunk) {
-          body += chunk.toString();
-        });
-        res.on('end', function () {
-          var use = Date.now() - start;
-          body.should.equal(mockResData);
-          use.should.above(490);
-          done();
-        });
-      });
-    });
-
-    it('should mock http.request() 500ms response delay and req.abort()', function (done) {
-      var mockURL = /foo$/;
-      var mockResData = 'mock data with regex url';
-      var mockResHeaders = { server: 'mock server' };
-      mm.http.request(mockURL, mockResData, mockResHeaders, 500);
-      done = pedding(2, done);
-
-      var start = Date.now();
-      var req = http.get({
-        host: 'cnodejs.org',
-        path: '/bar/foo'
-      }, function (res) {
-        res.headers.should.eql(mockResHeaders);
-        var body = '';
-        res.on('data', function (chunk) {
-          body += chunk.toString();
-        });
-        res.on('end', function () {
-          var use = Date.now() - start;
-          body.should.equal(mockResData);
-          use.should.above(490);
+        setTimeout(function () {
           req.abort();
-          done();
-        });
-      });
-      req.on('error', function (err) {
-        should.exist(err);
-        err.message.should.equal('socket hang up');
-        done();
+        }, 100);
       });
     });
-
-    it('should mock http.request() 1000ms delay', function (done) {
-      var mockURL = /foo$/;
-      var mockResData = 'mock data with regex url';
-      var mockResHeaders = { server: 'mock server' };
-      mm.http.request(mockURL, mockResData, mockResHeaders, 1000);
-
-      var start = Date.now();
-      var req = http.get({
-        host: 'cnodejs.org',
-        path: '/bar/foo'
-      });
-      req.on('response', function (res) {
-        done(new Error('should not call this'));
-      });
-      req.on('error', function (err) {
-        should.exist(err);
-        err.message.should.equal('socket hang up');
-        done();
-      });
-      setTimeout(function () {
-        req.abort();
-      }, 100);
-    });
-
   });
 
-  describe('http.requestError', function () {
-    it('should http.reqeust() return req error', function (done) {
-      done = pedding(2, done);
+  describe('http(s).requestError()', function () {
+    ['http', 'https'].forEach(function (modName) {
+      var mod = modName === 'http' ? http : https;
+      it('should ' + modName + '.reqeust() return req error', function (done) {
+        var modPort = modName === 'http' ? port : sslPort;
 
-      var mockURL = '/req';
-      var reqError = 'mock req error';
-      mm.http.requestError(mockURL, reqError);
+        done = pedding(2, done);
 
-      var req = http.get({
-        path: '/req'
-      }, function (res) {
-        done(new Error('should not call this'));
-      });
-      req.on('error', function (err) {
-        should.exist(err);
-        err.name.should.equal('MockHttpRequestError');
-        err.message.should.equal('mock req error');
-        done();
-      });
+        var mockURL = '/req';
+        var reqError = 'mock req error';
+        mm[modName].requestError(mockURL, reqError);
 
-      // not match
-      var req = http.get({
-        host: '127.0.0.1',
-        port: port,
-        path: '/req_not_match'
-      }, function (res) {
-        var body = '';
-        res.on('data', function (chunk) {
-          body += chunk.toString();
+        var req = mod.get({
+          path: '/req',
+          port: modPort,
+        }, function (res) {
+          done(new Error('should not call this'));
         });
-        res.on('end', function () {
-          body.should.equal('GET /req_not_match');
+        req.on('error', function (err) {
+          should.exist(err);
+          err.name.should.equal('MockHttpRequestError');
+          err.message.should.equal('mock req error');
+          done();
+        });
+
+        // not match
+        var req = mod.get({
+          host: '127.0.0.1',
+          port: modPort,
+          path: '/req_not_match'
+        }, function (res) {
+          var body = '';
+          res.on('data', function (chunk) {
+            body += chunk.toString();
+          });
+          res.on('end', function () {
+            body.should.equal('GET /req_not_match');
+            done();
+          });
+        });
+      });
+
+      it('should ' + modName + '.reqeust() return req error after response emit', function (done) {
+        var mockURL = '/res';
+        var resError = 'mock res error';
+        mm[modName].requestError(mockURL, null, resError);
+        done = pedding(2, done);
+
+        var req = mod.get({
+          path: '/res'
+        }, function (res) {
+          res.should.status(200);
+          res.should.have.header('server', 'MockMateServer');
+          done();
+        });
+        req.on('error', function (err) {
+          should.exist(err);
+          err.name.should.equal('MockHttpResponseError');
+          err.message.should.equal('mock res error');
           done();
         });
       });
-    });
 
-    it('should http.reqeust() return req error after response emit', function (done) {
-      var mockURL = '/res';
-      var resError = 'mock res error';
-      mm.http.requestError(mockURL, null, resError);
-      done = pedding(2, done);
+      it('should ' + modName + '.reqeust() return res error 500ms delay', function (done) {
+        var mockURL = '/res';
+        var resError = 'mock res error with 500ms delay';
+        mm[modName].requestError(mockURL, null, resError, 500);
+        done = pedding(2, done);
 
-      var req = http.get({
-        path: '/res'
-      }, function (res) {
-        res.should.status(200);
-        res.should.have.header('server', 'MockMateServer');
-        done();
+        var start = Date.now();
+        var req = mod.get({
+          path: '/res'
+        }, function (res) {
+          res.should.status(200);
+          res.should.have.header('server', 'MockMateServer');
+          done();
+        });
+        req.on('error', function (err) {
+          should.exist(err);
+          err.name.should.equal('MockHttpResponseError');
+          err.message.should.equal('mock res error with 500ms delay');
+          var use = Date.now() - start;
+          use.should.above(490);
+          done();
+        });
       });
-      req.on('error', function (err) {
-        should.exist(err);
-        err.name.should.equal('MockHttpResponseError');
-        err.message.should.equal('mock res error');
-        done();
-      });
-    });
 
-    it('should http.reqeust() return res error 500ms delay', function (done) {
-      var mockURL = '/res';
-      var resError = 'mock res error with 500ms delay';
-      mm.http.requestError(mockURL, null, resError, 500);
-      done = pedding(2, done);
+      it('should ' + modName + '.reqeust() not emit req error 1000ms delay after req.abort()', function (done) {
+        var mockURL = '/res';
+        var resError = 'mock res error with 500ms delay';
+        mm[modName].requestError(mockURL, null, resError, 1000);
 
-      var start = Date.now();
-      var req = http.get({
-        path: '/res'
-      }, function (res) {
-        res.should.status(200);
-        res.should.have.header('server', 'MockMateServer');
-        done();
+        var start = Date.now();
+        var req = mod.get({
+          path: '/res'
+        }, function (res) {
+          done(new Error('should not call this'));
+        });
+        req.on('error', function (err) {
+          should.exist(err);
+          err.name.should.equal('Error');
+          err.message.should.equal('socket hang up');
+          var use = Date.now() - start;
+          use.should.above(90);
+          done();
+        });
+        setTimeout(function () {
+          req.abort();
+        }, 100);
       });
-      req.on('error', function (err) {
-        should.exist(err);
-        err.name.should.equal('MockHttpResponseError');
-        err.message.should.equal('mock res error with 500ms delay');
-        var use = Date.now() - start;
-        use.should.above(490);
-        done();
-      });
-    });
 
-    it('should http.reqeust() not emit req error 1000ms delay after req.abort()', function (done) {
-      var mockURL = '/res';
-      var resError = 'mock res error with 500ms delay';
-      mm.http.requestError(mockURL, null, resError, 1000);
-
-      var start = Date.now();
-      var req = http.get({
-        path: '/res'
-      }, function (res) {
-        done(new Error('should not call this'));
-      });
-      req.on('error', function (err) {
-        should.exist(err);
-        err.name.should.equal('Error');
-        err.message.should.equal('socket hang up');
-        var use = Date.now() - start;
-        use.should.above(90);
-        done();
-      });
-      setTimeout(function () {
-        req.abort();
-      }, 100);
     });
 
   });

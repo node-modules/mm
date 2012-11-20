@@ -17,7 +17,7 @@ $ npm install mm
 
 ## Usage
 
-### Mock `http.request()`
+### Mock `http(s).request()`
 
 ```js
 var mm = require('mm');
@@ -27,8 +27,24 @@ var mockURL = '/foo';
 var mockResData = 'mock data';
 var mockResHeaders = { server: 'mock server' };
 mm.http.request(mockURL, mockResData, mockResHeaders);
+mm.https.request(mockURL, mockResData, mockResHeaders);
 
+// http
 http.get({
+  path: '/foo'
+}, function (res) {
+  console.log(res.headers); // should be mock headers
+  var body = '';
+  res.on('data', function (chunk) {
+    body += chunk.toString();
+  });
+  res.on('end', function () {
+    console.log(body); // should equal 'mock data'
+  });
+});
+
+// https
+https.get({
   path: '/foo'
 }, function (res) {
   console.log(res.headers); // should be mock headers
@@ -42,7 +58,7 @@ http.get({
 });
 ```
 
-### Mock `http.request()` error
+### Mock `http(s).request()` error
 
 ```js
 var mm = require('mm');

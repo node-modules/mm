@@ -17,7 +17,7 @@ test-cov: install lib-cov
 	@MM_COV=1 $(MAKE) test REPORTER=html-cov > coverage.html
 
 lib-cov:
-	@rm -rf ./lib-cov
+	@rm -rf $@
 	@$(JSCOVERAGE) lib $@
 
 .PHONY: test-cov test lib-cov install
