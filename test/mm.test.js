@@ -157,6 +157,8 @@ describe('mm.test.js', function () {
         var mockResHeaders = { server: 'mock server' };
         mm[modName].request(mockURL, mockResData, mockResHeaders);
 
+        done = pedding(2, done);
+
         mod.get({
           host: 'cnodejs.org',
           path: '/bar/foo'
@@ -171,11 +173,28 @@ describe('mm.test.js', function () {
             done();
           });
         });
+
+        mod.get({
+          host: 'cnodejs.org',
+          path: '/bar2/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          var body = '';
+          res.on('data', function (chunk) {
+            should.ok(Buffer.isBuffer(chunk));
+            body += chunk.toString();
+          });
+          res.on('end', function () {
+            body.should.equal(mockResData);
+            done();
+          });
+        });
+
       });
 
       it('should mock ' + modName + '.request() 500ms response delay', function (done) {
         var mockURL = /foo$/;
-        var mockResData = 'mock data with regex url';
+        var mockResData = [ 'mock data with regex url', '哈哈' ];
         var mockResHeaders = { server: 'mock server' };
         mm[modName].request(mockURL, mockResData, mockResHeaders, 500);
 
@@ -185,13 +204,15 @@ describe('mm.test.js', function () {
           path: '/bar/foo'
         }, function (res) {
           res.headers.should.eql(mockResHeaders);
+          res.setEncoding('utf8');
           var body = '';
           res.on('data', function (chunk) {
-            body += chunk.toString();
+            chunk.should.be.a('string');
+            body += chunk;
           });
           res.on('end', function () {
             var use = Date.now() - start;
-            body.should.equal(mockResData);
+            body.should.equal(mockResData.join(''));
             use.should.above(490);
             done();
           });
