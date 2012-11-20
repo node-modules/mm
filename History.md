@@ -1,4 +1,9 @@
 
+0.0.6 / 2012-11-21 
+==================
+
+  * fix http.request() twice bug; add res.setEncoding method
+
 0.0.5 / 2012-11-21 
 ==================
 
