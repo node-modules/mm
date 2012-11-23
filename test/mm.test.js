@@ -119,6 +119,7 @@ describe('mm.test.js', function () {
         mod.get({
           host: '127.0.0.1',
           port: modPort,
+          rejectUnauthorized: false,
           path: '/foo'
         }, function (res) {
           res.headers.should.eql(mockResHeaders);
@@ -136,6 +137,7 @@ describe('mm.test.js', function () {
         mod.get({
           host: '127.0.0.1',
           port: modPort,
+          rejectUnauthorized: false,
           path: '/'
         }, function (res) {
           res.headers.should.not.eql(mockResHeaders);
@@ -291,6 +293,7 @@ describe('mm.test.js', function () {
 
         var req = mod.get({
           path: '/req',
+          rejectUnauthorized: false,
           port: modPort,
         }, function (res) {
           done(new Error('should not call this'));
@@ -306,6 +309,7 @@ describe('mm.test.js', function () {
         var req = mod.get({
           host: '127.0.0.1',
           port: modPort,
+          rejectUnauthorized: false,
           path: '/req_not_match'
         }, function (res) {
           var body = '';
