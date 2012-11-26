@@ -17,6 +17,7 @@ var should = require('should');
 var http = require('http');
 var https = require('https');
 var pedding = require('pedding');
+var foo = require('./foo');
 
 
 describe('mm.test.js', function () {
@@ -50,6 +51,82 @@ describe('mm.test.js', function () {
 
   afterEach(function () {
     mm.restore();
+  });
+
+  describe('datas(), data(), empty()', function () {
+    it('should mock foo.getMultiValues() return `b1, b2, b3`', function (done) {
+      mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ]);
+      foo.getMultiValues(function (err, a1, a2, a3) {
+        should.not.exist(err);
+        a1.should.equal('b1');
+        a2.should.equal('b2');
+        a3.should.equal('b3');
+        done();
+      });
+    });
+
+    it('should mock foo.getMultiValues() return `b1, b2, b3` with timeout', function (done) {
+      mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ], 10);
+      foo.getMultiValues(function (err, a1, a2, a3) {
+        should.not.exist(err);
+        a1.should.equal('b1');
+        a2.should.equal('b2');
+        a3.should.equal('b3');
+        done();
+      });
+    });
+
+    it('should mock foo.getMultiValues() return `b1`', function (done) {
+      mm.datas(foo, 'getMultiValues', [ 'b1' ]);
+      foo.getMultiValues(function (err, a1, a2, a3) {
+        should.not.exist(err);
+        a1.should.equal('b1');
+        should.not.exist(a2);
+        should.not.exist(a3);
+        done();
+      });
+    });
+
+    it('should mock foo.getMultiValues() with "b1" return `b1`', function (done) {
+      mm.datas(foo, 'getMultiValues', 'b1');
+      foo.getMultiValues(function (err, a1, a2, a3) {
+        should.not.exist(err);
+        a1.should.equal('b1');
+        should.not.exist(a2);
+        should.not.exist(a3);
+        done();
+      });
+    });
+
+    it('should mock foo.getMultiValues() using data("b1")', function (done) {
+      mm.data(foo, 'getMultiValues', 'b1');
+      foo.getMultiValues(function (err, a1, a2, a3) {
+        should.not.exist(err);
+        a1.should.equal('b1');
+        should.not.exist(a2);
+        should.not.exist(a3);
+        done();
+      });
+    });
+
+    it('should mock foo.get() return [b1, b2]', function (done) {
+      mm.data(foo, 'get', [ 'b1', 'b2' ]);
+      foo.get('q1', function (err, data) {
+        should.not.exist(err);
+        data.should.eql([ 'b1', 'b2' ]);
+        done();
+      });
+    });
+
+    it('should mock foo.get() return empty', function (done) {
+      mm.empty(foo, 'get');
+      foo.get('q1', function (err, data) {
+        should.not.exist(err);
+        should.not.exist(data);
+        done();
+      });
+    });
+
   });
   
   describe('error()', function () {

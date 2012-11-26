@@ -24,3 +24,7 @@ exports.check = function (callback, a1, a2) {
     a2: a2,
   }));
 };
+
+exports.getMultiValues = function (callback) {
+  process.nextTick(callback.bind(null, null, 'a1', 'a2', 'a3'));
+};
