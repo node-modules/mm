@@ -1,4 +1,10 @@
 
+0.0.7 / 2012-11-26 
+==================
+
+  * try to find callback in arguments
+  * fixed CERT_HAS_EXPIRED with `rejectUnauthorized = false`
+
 0.0.6 / 2012-11-21 
 ==================
 
