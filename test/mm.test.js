@@ -100,6 +100,42 @@ describe('mm.test.js', function () {
       });
     });
 
+    it('should work for callback is not the last params case', function (done) {
+      var foo = require('./foo');
+      done = pedding(3, done);
+
+      mm.error(foo, 'get', 'mock foo.get error');
+      foo.get('q1', function (err, data) {
+        should.exist(err);
+        err.message.should.equal('mock foo.get error');
+        should.not.exist(data);
+        done();
+      });
+
+      foo.get('q2', function (err, data) {
+        should.exist(err);
+        err.message.should.equal('mock foo.get error');
+        should.not.exist(data);
+        done();
+      }, { h1: 'h1' }, false);
+
+      mm.error(foo, 'check', 'mock foo.check error');
+      foo.check(function (err, data) {
+        should.exist(err);
+        err.message.should.equal('mock foo.check error');
+        should.not.exist(data);
+        done();
+      }, { h1: 'h1' }, false);
+    });
+
+    it('should throw error', function () {
+      var foo = require('./foo');
+      mm.error(foo, 'check', 'mock foo.check error');
+      (function () {
+        foo.check();
+      }).should.throw('Can\'t find callback function');
+    });
+
   });
 
   describe('http(s).request()', function () {
