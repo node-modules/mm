@@ -102,6 +102,24 @@ fs.readFile('/etc/hosts', 'utf8', function (err, content) {
 });
 ```
 
+### Mock `callback(null, data)`
+
+```js
+mm.data(fs, 'readFile', new Buffer('some content'));
+```
+
+### Mock `callback(null, null)`
+
+```js
+mm.empty(mysql, 'query');
+```
+
+### Mock `callback(null, data1, data2)`
+
+```js
+mm.datas(urllib, 'request', new Buffer('data'), { headers: { foo: 'bar' } });
+```
+
 ### use `mm` just like [`muk`](https://github.com/fent/node-muk)
 
 ```js
