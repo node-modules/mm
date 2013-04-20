@@ -118,6 +118,21 @@ describe('mm.test.js', function () {
       });
     });
 
+    it('should mock foo.get() twice return [b1, b2]', function (done) {
+      mm.data(foo, 'get', [ 'b1', 'b2' ]);
+      var done = pedding(2, done);
+      foo.get('q1', function (err, data) {
+        should.not.exist(err);
+        data.should.eql([ 'b1', 'b2' ]);
+        done();
+      });
+      foo.get('q1', function (err, data) {
+        should.not.exist(err);
+        data.should.eql([ 'b1', 'b2' ]);
+        done();
+      });      
+    });
+
     it('should mock foo.get() return empty', function (done) {
       mm.empty(foo, 'get');
       foo.get('q1', function (err, data) {
