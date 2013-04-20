@@ -131,6 +131,21 @@ mm(fs, 'readFile', function (path, callback) {
 });
 ```
 
+## Authors
+
+```bash
+$ git summary 
+
+ project  : mm
+ repo age : 6 months
+ active   : 12 days
+ commits  : 31
+ files    : 15
+ authors  : 
+    30	fengmk2                 96.8%
+     1	dead-horse              3.2%
+```
+
 ## License 
 
 (The MIT License)
