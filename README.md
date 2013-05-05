@@ -138,12 +138,12 @@ $ git summary
 
  project  : mm
  repo age : 6 months
- active   : 12 days
- commits  : 31
+ active   : 14 days
+ commits  : 35
  files    : 15
  authors  : 
-    30	fengmk2                 96.8%
-     1	dead-horse              3.2%
+    32  fengmk2                 91.4%
+     3  dead-horse              8.6%
 ```
 
 ## License 

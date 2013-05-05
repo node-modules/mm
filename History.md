@@ -1,4 +1,11 @@
 
+0.1.3 / 2013-05-05 
+==================
+
+  * Merge pull request #3 from dead-horse/support-spawn
+  * do not emit when null
+  * add support for spawn
+
 0.1.2 / 2013-04-20 
 ==================
 
