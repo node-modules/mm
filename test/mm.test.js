@@ -16,9 +16,9 @@ var fs = require('fs');
 var should = require('should');
 var http = require('http');
 var https = require('https');
+var child_process = require('child_process');
 var pedding = require('pedding');
 var foo = require('./foo');
-
 
 describe('mm.test.js', function () {
 
@@ -522,6 +522,32 @@ describe('mm.test.js', function () {
 
     });
 
+  });
+
+  describe('spawn', function () {
+    it('should mm.spawn mock spawn', function (done) {
+      mm.spawn(1, 'stdout', 'stderr', 100);
+      var ls = child_process.spawn('ls', ['-a']);
+      var done = pedding(4, done);
+      ls.on('stdout', function (data) {
+        data.should.equal('stdout');
+        done();
+      });
+      ls.on('stderr', function (data) {
+        data.should.equal('stderr');
+        done();
+      });      
+      ls.on('close', function (code) {
+        code.should.equal(1);
+        done();
+      });
+      mm.restore();
+      var ls = child_process.spawn('ls', ['-a']);
+      ls.on('close', function (code) {
+        code.should.equal(0);
+        done();
+      });
+    });
   });
 
   describe('mm()', function () {
