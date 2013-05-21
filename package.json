@@ -4,14 +4,24 @@
   "description": "mock mate, mock http request, fs access and so on.",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "make test-all",
+    "blanket": { 
+      "pattern": "//^((?!(node_modules|test)).)*$/",
+      "data-cover-flags": {
+        "debug": false
+      }
+    },
+    "travis-cov": {
+      "threshold": 100
+    }
   },
   "dependencies": {
     "muk": ">=0.3.0"
   },
   "devDependencies": {
     "should": "*",
-    "jscover": "*",
+    "travis-cov": "*",
+    "blanket": "*",
     "pedding": "*",
     "mocha": "*"
   },
