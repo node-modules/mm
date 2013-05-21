@@ -554,7 +554,7 @@ describe('mm.test.js', function () {
       });
       mm.restore();
       var ls = child_process.spawn('ls', ['-a']);
-      ls.on('close', function (code) {
+      ls.on('exit', function (code) {
         code.should.equal(0);
         done();
       });
