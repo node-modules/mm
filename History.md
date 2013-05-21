@@ -1,4 +1,11 @@
 
+0.1.4 / 2013-05-21 
+==================
+
+  * use blanket instead of jscover
+  * fixed spawn test fail on node 0.6
+  * support emtpy error
+
 0.1.3 / 2013-05-05 
 ==================
 
