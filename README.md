@@ -1,4 +1,4 @@
-mm (美眉，Mock伴侣) [![Build Status](https://secure.travis-ci.org/fengmk2/mm.png)](http://travis-ci.org/fengmk2/mm)
+mm (美眉，Mock伴侣) [![Build Status](https://secure.travis-ci.org/fengmk2/mm.png)](http://travis-ci.org/fengmk2/mm) [![Coverage Status](https://coveralls.io/repos/fengmk2/mm/badge.png)](https://coveralls.io/r/fengmk2/mm)
 =======
 
 ![logo](https://raw.github.com/fengmk2/mm/master/logo.png)
@@ -6,8 +6,6 @@ mm (美眉，Mock伴侣) [![Build Status](https://secure.travis-ci.org/fengmk2/m
 mock mate, easy to mock `http` request, `fs` access and so on.
 
 Mock伴侣，单元测试必备。
-
-jscoverage: [100%](http://fengmk2.github.com/coverage/mm.html)
 
 ## Install
 
@@ -137,20 +135,20 @@ mm(fs, 'readFile', function (path, callback) {
 $ git summary 
 
  project  : mm
- repo age : 6 months
- active   : 14 days
- commits  : 35
+ repo age : 8 months
+ active   : 16 days
+ commits  : 41
  files    : 15
  authors  : 
-    32  fengmk2                 91.4%
-     3  dead-horse              8.6%
+    37  fengmk2                 90.2%
+     4  dead-horse              9.8%
 ```
 
 ## License 
 
 (The MIT License)
 
-Copyright (c) 2012 fengmk2 &lt;fengmk2@gmail.com&gt;
+Copyright (c) 2012 - 2013 fengmk2 &lt;fengmk2@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

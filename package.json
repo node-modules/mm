@@ -23,6 +23,8 @@
     "travis-cov": "*",
     "node-patch": "*",
     "blanket": "*",
+    "coveralls": "*",
+    "mocha-lcov-reporter": "*",
     "pedding": "*",
     "mocha": "*"
   },
