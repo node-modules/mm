@@ -581,6 +581,17 @@ describe('mm.test.js', function () {
         });
       });
     });
+
+    it('should mock readFileSync success', function () {
+      mm(fs, 'readFileSync', function () {
+        throw new Error('test error');
+      });
+      (function () {
+        fs.readFileSync(__filename);
+      }).should.throw('test error');
+      mm.restore();
+      fs.readFileSync(__filename).toString().should.include('mm()');
+    });
   });
 
 });
