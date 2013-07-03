@@ -582,7 +582,10 @@ describe('mm.test.js', function () {
       });
     });
 
-    it('should mock readFileSync success', function () {
+    it('should mock readFileSync success', function (done) {
+      mm(fs, 'readFileSync', function () {
+        throw new Error('test error');
+      });
       mm(fs, 'readFileSync', function () {
         throw new Error('test error');
       });
@@ -591,6 +594,18 @@ describe('mm.test.js', function () {
       }).should.throw('test error');
       mm.restore();
       fs.readFileSync(__filename).toString().should.include('mm()');
+
+      mm.error(fs, 'readFile');
+      mm.error(fs, 'readFile');
+      fs.readFile(__filename, function (err, data) {
+        should.exists(err);
+        mm.restore();
+        fs.readFile(__filename, function (err, data) {
+          should.not.exists(err);
+          data.toString().should.include('mm()');
+          done();
+        });
+      });
     });
   });
 
