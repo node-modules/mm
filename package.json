@@ -1,6 +1,6 @@
 {
   "name": "mm",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "mock mate, mock http request, fs access and so on.",
   "main": "index.js",
   "scripts": {

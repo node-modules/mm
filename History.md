@@ -1,4 +1,11 @@
 
+0.1.5 / 2013-07-03 
+==================
+
+  * hot fixed #5 mock same method twices restore fails bug
+  * add test for fs.readFileSync. fixed #5
+  * support coveralls
+
 0.1.4 / 2013-05-21 
 ==================
 
