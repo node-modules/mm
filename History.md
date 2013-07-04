@@ -1,4 +1,9 @@
 
+0.1.6 / 2013-07-04 
+==================
+
+  * update muk to 0.3.1, it had fixed https://github.com/fent/node-muk/pull/2 bug
+
 0.1.5 / 2013-07-03 
 ==================
 
