@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "muk": ">=0.3.0"
+    "muk": ">=0.3.1"
   },
   "devDependencies": {
     "should": "*",
