@@ -1,6 +1,8 @@
 mm (美眉，Mock伴侣) [![Build Status](https://secure.travis-ci.org/fengmk2/mm.png)](http://travis-ci.org/fengmk2/mm) [![Coverage Status](https://coveralls.io/repos/fengmk2/mm/badge.png)](https://coveralls.io/r/fengmk2/mm)
 =======
 
+[![NPM](https://nodei.co/npm/mm.png?downloads=true&stars=true)](https://nodei.co/npm/mm)
+
 ![logo](https://raw.github.com/fengmk2/mm/master/logo.png)
 
 mock mate, easy to mock `http` request, `fs` access and so on.
@@ -132,19 +134,19 @@ mm(fs, 'readFile', function (path, callback) {
 ## Authors
 
 ```bash
-$ git summary 
+$ git summary
 
  project  : mm
  repo age : 8 months
  active   : 16 days
  commits  : 41
  files    : 15
- authors  : 
+ authors  :
     37  fengmk2                 90.2%
      4  dead-horse              9.8%
 ```
 
-## License 
+## License
 
 (The MIT License)
 
