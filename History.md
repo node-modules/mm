@@ -1,4 +1,10 @@
 
+0.1.7 / 2013-11-20 
+==================
+
+  * http.request mock support mm.http.request({host: $host, url: $url})
+  * add npm image
+
 0.1.6 / 2013-07-04 
 ==================
 

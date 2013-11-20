@@ -137,13 +137,13 @@ mm(fs, 'readFile', function (path, callback) {
 $ git summary
 
  project  : mm
- repo age : 8 months
- active   : 16 days
- commits  : 41
+ repo age : 1 year, 1 month
+ active   : 21 days
+ commits  : 49
  files    : 15
  authors  :
-    37  fengmk2                 90.2%
-     4  dead-horse              9.8%
+    45  fengmk2                 91.8%
+     4  dead-horse              8.2%
 ```
 
 ## License
