@@ -1,6 +1,7 @@
 /*!
  * mm - test/mm.test.js
- * Copyright(c) 2012 fengmk2 <fengmk2@gmail.com>
+ *
+ * Copyright(c) 2012 - 2013 fengmk2 <fengmk2@gmail.com>
  * MIT Licensed
  */
 
@@ -130,7 +131,7 @@ describe('mm.test.js', function () {
         should.not.exist(err);
         data.should.eql([ 'b1', 'b2' ]);
         done();
-      });      
+      });
     });
 
     it('should mock foo.get() return empty', function (done) {
@@ -143,7 +144,7 @@ describe('mm.test.js', function () {
     });
 
   });
-  
+
   describe('error()', function () {
     it('should mock fs.readFile return error', function (done) {
       mm.error(fs, 'readFile', 'can not read file');
@@ -187,7 +188,7 @@ describe('mm.test.js', function () {
         should.not.exist(data);
         done();
       });
-    });    
+    });
 
     it('should mock error with 500ms timeout', function (done) {
       mm.error(fs, 'readFile', '500ms timeout', 500);
@@ -338,6 +339,84 @@ describe('mm.test.js', function () {
         var mockResData = [ 'mock data with regex url', '哈哈' ];
         var mockResHeaders = { server: 'mock server' };
         mm[modName].request(mockURL, mockResData, mockResHeaders, 500);
+
+        var start = Date.now();
+        mod.get({
+          host: 'cnodejs.org',
+          path: '/bar/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          res.setEncoding('utf8');
+          var body = '';
+          res.on('data', function (chunk) {
+            chunk.should.be.a('string');
+            body += chunk;
+          });
+          res.on('end', function () {
+            var use = Date.now() - start;
+            body.should.equal(mockResData.join(''));
+            use.should.above(490);
+            done();
+          });
+        });
+      });
+
+      it('should mock ' + modName + '.request({url: "/bar/foo"}) 500ms response delay', function (done) {
+        var mockResData = [ 'mock data with regex url', '哈哈' ];
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request({url: '/bar/foo'}, mockResData, mockResHeaders, 500);
+
+        var start = Date.now();
+        mod.get({
+          host: 'cnodejs.org',
+          path: '/bar/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          res.setEncoding('utf8');
+          var body = '';
+          res.on('data', function (chunk) {
+            chunk.should.be.a('string');
+            body += chunk;
+          });
+          res.on('end', function () {
+            var use = Date.now() - start;
+            body.should.equal(mockResData.join(''));
+            use.should.above(490);
+            done();
+          });
+        });
+      });
+
+      it('should mock ' + modName + '.request({host: "cnodejs.org"}) 500ms response delay', function (done) {
+        var mockResData = [ 'mock data with regex url', '哈哈' ];
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request({host: "cnodejs.org"}, mockResData, mockResHeaders, 500);
+
+        var start = Date.now();
+        mod.get({
+          host: 'cnodejs.org',
+          path: '/bar/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          res.setEncoding('utf8');
+          var body = '';
+          res.on('data', function (chunk) {
+            chunk.should.be.a('string');
+            body += chunk;
+          });
+          res.on('end', function () {
+            var use = Date.now() - start;
+            body.should.equal(mockResData.join(''));
+            use.should.above(490);
+            done();
+          });
+        });
+      });
+
+      it('should mock ' + modName + '.request({host: /cnodejs/}) 500ms response delay', function (done) {
+        var mockResData = [ 'mock data with regex url', '哈哈' ];
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request({host: /cnodejs/}, mockResData, mockResHeaders, 500);
 
         var start = Date.now();
         mod.get({
@@ -547,7 +626,7 @@ describe('mm.test.js', function () {
       ls.on('stderr', function (data) {
         data.should.equal('stderr');
         done();
-      });      
+      });
       ls.on('close', function (code) {
         code.should.equal(1);
         done();
