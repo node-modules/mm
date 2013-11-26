@@ -349,7 +349,7 @@ describe('mm.test.js', function () {
           res.setEncoding('utf8');
           var body = '';
           res.on('data', function (chunk) {
-            chunk.should.be.a('string');
+            chunk.should.be.String;
             body += chunk;
           });
           res.on('end', function () {
@@ -375,7 +375,7 @@ describe('mm.test.js', function () {
           res.setEncoding('utf8');
           var body = '';
           res.on('data', function (chunk) {
-            chunk.should.be.a('string');
+            chunk.should.be.String;
             body += chunk;
           });
           res.on('end', function () {
@@ -401,7 +401,7 @@ describe('mm.test.js', function () {
           res.setEncoding('utf8');
           var body = '';
           res.on('data', function (chunk) {
-            chunk.should.be.a('string');
+            chunk.should.be.String;
             body += chunk;
           });
           res.on('end', function () {
@@ -427,7 +427,7 @@ describe('mm.test.js', function () {
           res.setEncoding('utf8');
           var body = '';
           res.on('data', function (chunk) {
-            chunk.should.be.a('string');
+            chunk.should.be.String;
             body += chunk;
           });
           res.on('end', function () {
