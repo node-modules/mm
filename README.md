@@ -114,10 +114,10 @@ mm.data(fs, 'readFile', new Buffer('some content'));
 mm.empty(mysql, 'query');
 ```
 
-### Mock `callback(null, data1, data2)`
+### Mock `callback(null, [data1, data2])`
 
 ```js
-mm.datas(urllib, 'request', new Buffer('data'), { headers: { foo: 'bar' } });
+mm.datas(urllib, 'request', [new Buffer('data'), { headers: { foo: 'bar' } }]);
 ```
 
 ### use `mm` just like [`muk`](https://github.com/fent/node-muk)
