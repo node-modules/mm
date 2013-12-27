@@ -26,4 +26,7 @@ test-coveralls:
 
 test-all: test test-cov
 
-.PHONY: install test test-cov test-all test-coveralls
+contributors: install
+	@./node_modules/contributors/bin/contributors -f plain -o AUTHORS
+
+.PHONY: test

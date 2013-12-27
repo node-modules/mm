@@ -1,6 +1,6 @@
 {
   "name": "mm",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "mock mate, mock http request, fs access and so on.",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
     "semver": "~2.2.1"
   },
   "devDependencies": {
+    "contributors": "*",
     "should": "*",
     "travis-cov": "*",
     "node-patch": "*",
