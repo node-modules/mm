@@ -16,7 +16,8 @@
     }
   },
   "dependencies": {
-    "muk": ">=0.3.1"
+    "muk": ">=0.3.1",
+    "semver": "~2.2.1"
   },
   "devDependencies": {
     "should": "*",
