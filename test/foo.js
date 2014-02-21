@@ -25,6 +25,12 @@ exports.check = function (callback, a1, a2) {
   }));
 };
 
+exports.query = function (callback) {
+  process.nextTick(callback.bind(null, null, {
+    result: 'result'
+  }));
+};
+
 exports.getMultiValues = function (callback) {
   process.nextTick(callback.bind(null, null, 'a1', 'a2', 'a3'));
 };

@@ -16,19 +16,21 @@
     }
   },
   "dependencies": {
-    "muk": ">=0.3.1",
-    "semver": "~2.2.1"
+    "muk": "0.3.1",
+    "semver": "2.2.1",
+    "thunkify": "0.0.1"
   },
   "devDependencies": {
-    "contributors": "*",
-    "should": "*",
-    "travis-cov": "*",
-    "node-patch": "*",
+    "autod": "*",
     "blanket": "*",
+    "contributors": "*",
     "coveralls": "*",
+    "mocha": "*",
     "mocha-lcov-reporter": "*",
-    "pedding": "*",
-    "mocha": "*"
+    "node-patch": "*",
+    "pedding": "0.0.3",
+    "should": "3.1.2",
+    "travis-cov": "*"
   },
   "homepage": "http://github.com/fengmk2/mm",
   "repository": {

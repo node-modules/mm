@@ -1,7 +1,7 @@
-/*!
+/**!
  * mm - test/mm.test.js
  *
- * Copyright(c) 2012 - 2013 fengmk2 <fengmk2@gmail.com>
+ * Copyright(c) 2012 - 2014 fengmk2 <fengmk2@gmail.com>
  * MIT Licensed
  */
 
@@ -12,13 +12,13 @@
  */
 
 var path = require('path');
-var mm = require('../');
 var fs = require('fs');
 var should = require('should');
 var http = require('http');
 var https = require('https');
 var child_process = require('child_process');
 var pedding = require('pedding');
+var mm = require('../');
 var foo = require('./foo');
 
 describe('mm.test.js', function () {
@@ -204,7 +204,7 @@ describe('mm.test.js', function () {
       });
     });
 
-    it('should work for callback is not the last params case', function (done) {
+    it.skip('should work for callback is not the last params case', function (done) {
       var foo = require('./foo');
       done = pedding(3, done);
 
@@ -232,11 +232,11 @@ describe('mm.test.js', function () {
       }, { h1: 'h1' }, false);
     });
 
-    it('should throw error', function () {
+    it.skip('should throw error', function () {
       var foo = require('./foo');
-      mm.error(foo, 'check', 'mock foo.check error');
+      mm.error(foo, 'query', 'mock foo.check error');
       (function () {
-        foo.check();
+        foo.query();
       }).should.throw('Can\'t find callback function');
     });
 
