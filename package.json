@@ -4,12 +4,11 @@
   "description": "mock mate, mock http request, fs access and so on.",
   "main": "index.js",
   "scripts": {
-    "test": "make test-all",
+    "test": "make test-all"
+  },
+  "config": {
     "blanket": {
-      "pattern": "mm/lib",
-      "data-cover-flags": {
-        "debug": false
-      }
+      "pattern": "mm/lib"
     },
     "travis-cov": {
       "threshold": 99
