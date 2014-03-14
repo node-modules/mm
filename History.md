@@ -1,4 +1,10 @@
 
+0.2.1 / 2014-03-14 
+==================
+
+  * if coveralls crash, dont break the test pass
+  * fix http request mock not work on 0.11.12 and no more test on 0.8.x
+
 0.2.0 / 2014-02-21 
 ==================
 
