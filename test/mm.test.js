@@ -18,6 +18,7 @@ var http = require('http');
 var https = require('https');
 var child_process = require('child_process');
 var pedding = require('pedding');
+var ChunkStream = require('chunkstream');
 var mm = require('../');
 var foo = require('./foo');
 
@@ -382,6 +383,60 @@ describe('mm.test.js', function () {
             var use = Date.now() - start;
             body.should.equal(mockResData.join(''));
             use.should.above(490);
+            done();
+          });
+        });
+      });
+
+      it('should mock ' + modName + '.request({url: "/bar/foo"}) with stream 500ms response delay',
+      function (done) {
+        var mockResData = new ChunkStream([ 'mock data with regex url', '哈哈' ]);
+        var mockResHeaders = { server: 'mock server' };
+        mm[modName].request({url: '/bar/foo'}, mockResData, mockResHeaders, 500);
+
+        var start = Date.now();
+        mod.get({
+          host: 'npmjs.org',
+          path: '/bar/foo'
+        }, function (res) {
+          res.headers.should.eql(mockResHeaders);
+          res.setEncoding('utf8');
+          var body = '';
+          res.on('data', function (chunk) {
+            chunk.should.be.a.String;
+            body += chunk;
+          });
+          res.on('end', function () {
+            var use = Date.now() - start;
+            body.should.equal([ 'mock data with regex url', '哈哈' ].join(''));
+            use.should.above(490);
+            done();
+          });
+        });
+      });
+
+      it('should mock ' + modName + '.request({url: "/bar/foo"}) with fs readstream no response delay',
+      function (done) {
+        var mockResData = fs.createReadStream(__filename);
+        var mockResHeaders = { server: 'mock server', statusCode: 201 };
+        mm[modName].request('', mockResData, mockResHeaders);
+
+        var start = Date.now();
+        mod.get({
+          host: 'npmjs.org',
+          path: '/bar/foo'
+        }, function (res) {
+          res.should.status(201);
+          res.headers.should.eql(mockResHeaders);
+          res.setEncoding('utf8');
+          var body = '';
+          res.on('data', function (chunk) {
+            chunk.should.be.a.String;
+            body += chunk;
+          });
+          res.on('end', function () {
+            var use = Date.now() - start;
+            body.should.equal(fs.readFileSync(__filename, 'utf8'));
             done();
           });
         });
