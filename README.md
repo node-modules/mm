@@ -1,4 +1,4 @@
-mm (美眉，Mock伴侣) [![Build Status](https://secure.travis-ci.org/fengmk2/mm.png)](http://travis-ci.org/fengmk2/mm) [![Coverage Status](https://coveralls.io/repos/fengmk2/mm/badge.png)](https://coveralls.io/r/fengmk2/mm)
+mm (美眉，Mock伴侣) [![Build Status](https://travis-ci.org/node-modules/mm.svg?branch=master)](https://travis-ci.org/node-modules/mm)
 =======
 
 [![NPM](https://nodei.co/npm/mm.png?downloads=true&stars=true)](https://nodei.co/npm/mm)
