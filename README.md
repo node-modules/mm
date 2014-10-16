@@ -95,7 +95,7 @@ urllib.request = function (args..., callback) {
 mm.restore();
 ```
 
-### .http.request(mockUrl, mockResData, mockResHeaders) and .https.request
+### .http.request(mockUrl, mockResData, mockResHeaders) and .https.request(mockUrl, mockResData, mockResHeaders)
 
 ```js
 var mm = require('mm');
@@ -162,9 +162,9 @@ req.on('error', function (err) {
 
 ## Authors
 
-fengmk2 <https://github.com/fengmk2>
-dead-horse <https://github.com/dead-horse>
-alsotang <https://github.com/alsotang>
+* fengmk2 <https://github.com/fengmk2>
+* dead-horse <https://github.com/dead-horse>
+* alsotang <https://github.com/alsotang>
 
 ## License
 
