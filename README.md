@@ -76,7 +76,7 @@ mysql.query = function (args..., callback) {
 }
 ```
 
-### .datas
+### .datas(module, propertyName, argsArray)
 
 ```js
 mm.datas(urllib, 'request', [new Buffer('data'), {headers: { foo: 'bar' }}]);
