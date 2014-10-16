@@ -1,13 +1,7 @@
-mm (美眉，Mock伴侣) [![Build Status](https://travis-ci.org/node-modules/mm.svg?branch=master)](https://travis-ci.org/node-modules/mm)
+mm [![Build Status](https://travis-ci.org/node-modules/mm.svg?branch=master)](https://travis-ci.org/node-modules/mm)
 =======
 
-[![NPM](https://nodei.co/npm/mm.png?downloads=true&stars=true)](https://nodei.co/npm/mm)
-
-![logo](https://raw.github.com/fengmk2/mm/master/logo.png)
-
-mock mate, easy to mock `http` request, `fs` access and so on.
-
-Mock伴侣，单元测试必备。
+An simple but flexible **mock(or say stub)** package
 
 ## Install
 
@@ -17,7 +11,91 @@ $ npm install mm
 
 ## Usage
 
-### Mock `http(s).request()`
+```js
+var mm = require('mm');
+var fs = require('fs');
+
+mm(fs, 'readFileSync', function (filename) {
+  return filename + ' content';
+});
+
+console.log(fs.readFileSync('《九评 Java》'));
+// => 《九评 Java》 content
+
+mm.restore();
+
+console.log(fs.readFileSync('《九评 Java》'));
+// => throw `Error: ENOENT, no such file or directory '《九评 Java》`
+```
+
+## API
+
+### .error(module, propertyName, errerMessage)
+
+```js
+var mm = require('mm');
+var fs = require('fs');
+
+mm.error(fs, 'readFile', 'mock fs.readFile return error');
+
+fs.readFile('/etc/hosts', 'utf8', function (err, content) {
+  // err.name === 'MockError'
+  // err.message === 'mock fs.readFile return error'
+  console.log(err);
+
+  mm.restore(); // remove all mock effects.
+
+  fs.readFile('/etc/hosts', 'utf8', function (err, content) {
+    console.log(err); // => null
+    console.log(content); // => your hosts
+  });
+});
+```
+
+### .data(module, propertyName, firstCallbackArg)
+
+```js
+mm.data(fs, 'readFile', new Buffer('some content'));
+
+// equals
+
+fs.readFile = function (args..., callback) {
+  callback(null, new Buffer('some content'))
+};
+```
+
+### .emply(module, propertyName)
+
+```js
+mm.empty(mysql, 'query');
+
+// equals
+
+mysql.query = function (args..., callback) {
+  callback();
+}
+```
+
+### .datas
+
+```js
+mm.datas(urllib, 'request', [new Buffer('data'), {headers: { foo: 'bar' }}]);
+
+// equals
+
+urllib.request = function (args..., callback) {
+  callback(null, new Buffer('data'), {headers: { foo: 'bar' }});
+}
+```
+
+### .restore()
+
+```js
+// restore all mock properties
+mm.restore();
+```
+
+### .http.request(mockUrl, mockResData, mockResHeaders) and .https.request
 
 ```js
 var mm = require('mm');
@@ -58,7 +136,7 @@ https.get({
 });
 ```
 
-### Mock `http(s).request()` error
+### .http.requestError(mockUrl, reqError, resError)
 
 ```js
 var mm = require('mm');
@@ -82,93 +160,12 @@ req.on('error', function (err) {
 }
 ```
 
-### Mock async function callback error
-
-```js
-var mm = require('mm');
-var fs = require('fs');
-
-mm.error(fs, 'readFile', 'mock fs.readFile return error');
-
-fs.readFile('/etc/hosts', 'utf8', function (err, content) {
-  console.log(err); // should return mock err: err.name === 'MockError'
-
-  mm.restore(); // remove all mock effects.
-
-  fs.readFile('/etc/hosts', 'utf8', function (err, content) {
-    console.log(err); // should return null
-    console.log(content); // should show the host list
-  });
-});
-```
-
-### Mock `callback(null, data)`
-
-```js
-mm.data(fs, 'readFile', new Buffer('some content'));
-```
-
-### Mock `callback(null, null)`
-
-```js
-mm.empty(mysql, 'query');
-```
-
-### Mock `callback(null, [data1, data2])`
-
-```js
-mm.datas(urllib, 'request', [new Buffer('data'), { headers: { foo: 'bar' } }]);
-```
-
-### use `mm` just like [`muk`](https://github.com/fent/node-muk)
-
-```js
-var fs = require('fs');
-var mm = require('mm');
-
-mm(fs, 'readFile', function (path, callback) {
-  process.nextTick(callback.bind(null, null, 'file contents here'));
-});
-```
-
 ## Authors
 
-```bash
-$ git summary
-
- project  : mm
- repo age : 1 year, 2 months
- active   : 23 days
- commits  : 55
- files    : 16
- authors  :
-    49  fengmk2                 89.1%
-     4  dead-horse              7.3%
-     1  AlsoTang                1.8%
-     1  Alsotang                1.8%
-```
+fengmk2 <https://github.com/fengmk2>
+dead-horse <https://github.com/dead-horse>
+alsotang <https://github.com/alsotang>
 
 ## License
 
-(The MIT License)
-
-Copyright (c) 2012 - 2014 fengmk2 &lt;fengmk2@gmail.com&gt;
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+MIT
