@@ -52,7 +52,7 @@ fs.readFile('/etc/hosts', 'utf8', function (err, content) {
 });
 ```
 
-### .data(module, propertyName, firstCallbackArg)
+### .data(module, propertyName, secondCallbackArg)
 
 ```js
 mm.data(fs, 'readFile', new Buffer('some content'));
