@@ -1,4 +1,11 @@
 
+1.0.0 / 2014-10-30
+==================
+
+ * docs(readme): add badges
+ * feat(error): support mock error on generator function
+ * feat(data): support mock generator function
+
 0.2.1 / 2014-03-14 
 ==================
 
