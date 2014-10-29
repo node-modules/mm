@@ -1,7 +1,32 @@
-mm [![Build Status](https://travis-ci.org/node-modules/mm.svg?branch=master)](https://travis-ci.org/node-modules/mm)
+mm
 =======
 
-An simple but flexible **mock(or say stub)** package
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
+[![Gittip][gittip-image]][gittip-url]
+[![David deps][david-image]][david-url]
+[![node version][node-image]][node-url]
+[![npm download][download-image]][download-url]
+
+[npm-image]: https://img.shields.io/npm/v/mm.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/mm
+[travis-image]: https://img.shields.io/travis/node-modules/mm.svg?style=flat-square
+[travis-url]: https://travis-ci.org/node-modules/mm
+[coveralls-image]: https://img.shields.io/coveralls/node-modules/mm.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/node-modules/mm?branch=master
+[gittip-image]: https://img.shields.io/gittip/fengmk2.svg?style=flat-square
+[gittip-url]: https://www.gittip.com/fengmk2/
+[david-image]: https://img.shields.io/david/node-modules/mm.svg?style=flat-square
+[david-url]: https://david-dm.org/node-modules/mm
+[node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
+[node-url]: http://nodejs.org/download/
+[download-image]: https://img.shields.io/npm/dm/mm.svg?style=flat-square
+[download-url]: https://npmjs.org/package/mm
+
+An simple but flexible **mock(or say stub)** package, mock mate.
+
+![logo](https://raw.github.com/node-modules/mm/master/logo.png)
 
 ## Install
 
@@ -26,6 +51,22 @@ mm.restore();
 
 console.log(fs.readFileSync('《九评 Java》'));
 // => throw `Error: ENOENT, no such file or directory '《九评 Java》`
+```
+
+### Support generator function
+
+```js
+var foo = {
+  get: function* () {
+    return 1;
+  }
+};
+
+mm.data(foo, 'get', 2);
+var data = yield* foo.get(); // data should return 2
+
+mm.error(foo, 'get', 'error boom');
+yield* foo.get(); // should throw error
 ```
 
 ## API
