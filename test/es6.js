@@ -41,4 +41,32 @@ describe('es6.js', function () {
       data.should.equal(2);
     });
   });
+
+  describe('error()', function () {
+    it('should mock error', function* () {
+      mm.error(foo, 'getValue');
+      try {
+        yield* foo.getValue();
+        throw new Error('should not run this');
+      } catch (err) {
+        err.message.should.equal('mm mock error');
+      }
+
+      mm.error(foo, 'getValue', 'foo error', 200);
+      try {
+        yield* foo.getValue();
+        throw new Error('should not run this');
+      } catch (err) {
+        err.message.should.equal('foo error');
+      }
+
+      mm.error(foo, 'getValue', new Error('new foo error'));
+      try {
+        yield* foo.getValue();
+        throw new Error('should not run this');
+      } catch (err) {
+        err.message.should.equal('new foo error');
+      }
+    });
+  });
 });
