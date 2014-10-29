@@ -4,12 +4,15 @@ TIMEOUT = 10000
 MOCHA_OPTS =
 
 install:
-	@npm install --registry=http://r.cnpmjs.org
+	@npm install --registry=https://registry.npm.taobao.org
 
 test: install
-	@NODE_ENV=test ./node_modules/.bin/mocha \
+	@NODE_ENV=test ./node_modules/.bin/mocha --harmony \
 		--reporter $(REPORTER) \
 		--timeout $(TIMEOUT) \
+		--require co-mocha \
+		--require should \
+		--require should-http \
 		$(MOCHA_OPTS) \
 		$(TESTS)
 
@@ -30,6 +33,7 @@ contributors: install
 	@./node_modules/.bin/contributors -f plain -o AUTHORS
 
 autod: install
-	@./node_modules/.bin/autod -w
+	@./node_modules/.bin/autod -w --prefix "~"
+	@$(MAKE) install
 
 .PHONY: test
