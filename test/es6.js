@@ -26,6 +26,8 @@ describe('es6.js', function () {
     }
   };
 
+  afterEach(mm.restore);
+
   describe('datas(), data()', function () {
     it('should mock generator function', function* () {
       mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ]);
@@ -39,6 +41,10 @@ describe('es6.js', function () {
       mm.data(foo, 'getValue', 2, 500);
       var data = yield* foo.getValue();
       data.should.equal(2);
+
+      mm.restore();
+      var data = yield* foo.getValue();
+      data.should.equal(1);
     });
   });
 
