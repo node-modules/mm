@@ -5,7 +5,7 @@
  * MIT Licensed
  */
 
-"use strict";
+'use strict';
 
 /**
  * Module dependencies.
@@ -747,4 +747,5 @@ describe('mm.test.js', function () {
 var enable = require('enable');
 if (enable.generator) {
   require('./es6');
+  require('./thunk');
 }
