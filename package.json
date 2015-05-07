@@ -23,7 +23,7 @@
     "thenify": "~3.1.0"
   },
   "devDependencies": {
-    "autod": "*",
+    "autod": "~2.0.1",
     "blanket": "*",
     "chunkstream": "~0.0.1",
     "co": "~4.5.4",
@@ -31,6 +31,7 @@
     "co-urllib": "~0.2.3",
     "contributors": "*",
     "coveralls": "*",
+    "istanbul-harmony": "~0.3.12",
     "mocha": "*",
     "mocha-lcov-reporter": "*",
     "node-patch": "*",
