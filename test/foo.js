@@ -34,3 +34,7 @@ exports.query = function (callback) {
 exports.getMultiValues = function (callback) {
   process.nextTick(callback.bind(null, null, 'a1', 'a2', 'a3'));
 };
+
+exports.mirror = function (input) {
+  return input;
+};
