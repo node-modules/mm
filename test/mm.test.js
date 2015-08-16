@@ -243,6 +243,46 @@ describe('mm.test.js', function () {
 
   });
 
+  describe('syncData, syncEmpty', function () {
+    it('should mock data ok', function () {
+      var foo = require('./foo');
+      mm.syncData(foo, 'mirror', 'test');
+      foo.mirror('input').should.equal('test');
+    });
+
+    it('should mock empty ok', function () {
+      var foo = require('./foo');
+      mm.syncEmpty(foo, 'mirror');
+      should(foo.mirror('input')).not.exist;
+    });
+  });
+
+  describe('syncError', function () {
+    it('should mock error with out error message ok', function () {
+      var foo = require('./foo');
+      mm.syncError(foo, 'mirror');
+      (function () {
+        foo.mirror('input');
+      }).should.throw('mm mock error');
+    });
+
+    it('should mock error with string error message ok', function () {
+      var foo = require('./foo')
+      mm.syncError(foo, 'mirror', 'mock error');
+      (function () {
+        foo.mirror('input');
+      }).should.throw('mock error');
+    });
+
+    it('should mock error with error object ok', function () {
+      var foo = require('./foo');
+      mm.syncError(foo, 'mirror', new Error('mock error'));
+      (function () {
+        foo.mirror('input');
+      }).should.throw('mock error');
+    });
+  });
+
   describe('http(s).request()', function () {
     ['http', 'https'].forEach(function (modName) {
       var mod = modName === 'http' ? http : https;
