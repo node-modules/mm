@@ -1,5 +1,5 @@
 /**!
- * mm - test/thunk.js
+ * mm - test/thunk.test.js
  *
  * Copyright(c) fengmk2 and other contributors.
  * MIT Licensed
@@ -17,7 +17,7 @@
 var thunkify = require('thunkify-wrap');
 var mm = require('..');
 
-describe('thunk.js', function () {
+describe('test/thunk.test.js', function () {
   var foo = {
     getMultiValues: thunkify(function (arg, callback) {
       setImmediate(function () {

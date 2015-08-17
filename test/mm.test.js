@@ -267,7 +267,7 @@ describe('mm.test.js', function () {
     });
 
     it('should mock error with string error message ok', function () {
-      var foo = require('./foo')
+      var foo = require('./foo');
       mm.syncError(foo, 'mirror', 'mock error');
       (function () {
         foo.mirror('input');
@@ -460,8 +460,6 @@ describe('mm.test.js', function () {
         var mockResData = fs.createReadStream(__filename);
         var mockResHeaders = { server: 'mock server', statusCode: 201 };
         mm[modName].request('', mockResData, mockResHeaders);
-
-        var start = Date.now();
         mod.get({
           host: 'npmjs.org',
           path: '/bar/foo'
@@ -475,7 +473,6 @@ describe('mm.test.js', function () {
             body += chunk;
           });
           res.on('end', function () {
-            var use = Date.now() - start;
             body.should.equal(fs.readFileSync(__filename, 'utf8'));
             done();
           });
@@ -485,7 +482,7 @@ describe('mm.test.js', function () {
       it('should mock ' + modName + '.request({host: "cnodejs.org"}) 500ms response delay', function (done) {
         var mockResData = [ 'mock data with regex url', '哈哈' ];
         var mockResHeaders = { server: 'mock server' };
-        mm[modName].request({host: "cnodejs.org"}, mockResData, mockResHeaders, 500);
+        mm[modName].request({host: 'cnodejs.org'}, mockResData, mockResHeaders, 500);
 
         var start = Date.now();
         mod.get({
@@ -572,12 +569,11 @@ describe('mm.test.js', function () {
         var mockResHeaders = { server: 'mock server' };
         mm[modName].request(mockURL, mockResData, mockResHeaders, 1000);
 
-        var start = Date.now();
         var req = mod.get({
           host: 'cnodejs.org',
           path: '/bar/foo'
         });
-        req.on('response', function (res) {
+        req.on('response', function () {
           done(new Error('should not call this'));
         });
         req.on('error', function (err) {
@@ -608,7 +604,7 @@ describe('mm.test.js', function () {
           path: '/req',
           rejectUnauthorized: false,
           port: modPort,
-        }, function (res) {
+        }, function () {
           done(new Error('should not call this'));
         });
         req.on('error', function (err) {
@@ -689,7 +685,7 @@ describe('mm.test.js', function () {
         var start = Date.now();
         var req = mod.get({
           path: '/res'
-        }, function (res) {
+        }, function () {
           done(new Error('should not call this'));
         });
         req.on('error', function (err) {
@@ -771,7 +767,7 @@ describe('mm.test.js', function () {
 
       mm.error(fs, 'readFile');
       mm.error(fs, 'readFile');
-      fs.readFile(__filename, function (err, data) {
+      fs.readFile(__filename, function (err) {
         should.exists(err);
         mm.restore();
         fs.readFile(__filename, function (err, data) {

@@ -6,7 +6,6 @@ mm
 [![Test coverage][coveralls-image]][coveralls-url]
 [![Gittip][gittip-image]][gittip-url]
 [![David deps][david-image]][david-url]
-[![node version][node-image]][node-url]
 [![npm download][download-image]][download-url]
 
 [npm-image]: https://img.shields.io/npm/v/mm.svg?style=flat-square
@@ -19,19 +18,15 @@ mm
 [gittip-url]: https://www.gittip.com/fengmk2/
 [david-image]: https://img.shields.io/david/node-modules/mm.svg?style=flat-square
 [david-url]: https://david-dm.org/node-modules/mm
-[node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
-[node-url]: http://nodejs.org/download/
 [download-image]: https://img.shields.io/npm/dm/mm.svg?style=flat-square
 [download-url]: https://npmjs.org/package/mm
 
 An simple but flexible **mock(or say stub)** package, mock mate.
 
-![logo](https://raw.github.com/node-modules/mm/master/logo.png)
-
 ## Install
 
 ```bash
-$ npm install mm
+$ npm install mm --save-dev
 ```
 
 ## Usage
@@ -212,6 +207,7 @@ req.on('error', function (err) {
 This software is licensed under the MIT License.
 
 Copyright (C) 2012 - 2014 fengmk2 <fengmk2@gmail.com>
+Copyright (C) 2015 node-modules
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = require('./lib/mm');
 var enable = require('enable');
 if (enable.generator) {

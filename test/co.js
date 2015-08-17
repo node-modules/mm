@@ -1,11 +1,11 @@
 /**!
  * mm - test/co.js
  *
- * Copyright(c) fengmk2 and other contributors.
+ * Copyright(c) node-modules and other contributors.
  * MIT Licensed
  *
  * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.github.com)
+ *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.com)
  */
 
 'use strict';
@@ -14,7 +14,6 @@
  * Module dependencies.
  */
 
-var should = require('should');
 var urllib = require('co-urllib');
 var co = require('co');
 var fs = require('fs');
