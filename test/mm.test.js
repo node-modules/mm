@@ -191,6 +191,18 @@ describe('mm.test.js', function () {
       });
     });
 
+    it('should mock error with properties', function (done) {
+      mm.error(fs, 'readFile', 'mm mock error', { code: 'ENOENT', name: 'MockError' });
+      fs.readFile('/etc/hosts', 'utf8', function (err, data) {
+        should.exist(err);
+        err.name.should.equal('MockError');
+        err.message.should.equal('mm mock error');
+        err.code.should.equal('ENOENT');
+        should.not.exist(data);
+        done();
+      });
+    });
+
     it('should mock error with 500ms timeout', function (done) {
       mm.error(fs, 'readFile', '500ms timeout', 500);
       var start = Date.now();
@@ -199,6 +211,21 @@ describe('mm.test.js', function () {
         should.exist(err);
         err.name.should.equal('MockError');
         err.message.should.equal('500ms timeout');
+        should.not.exist(data);
+        use.should.above(490);
+        done();
+      });
+    });
+
+    it('should mock error with 500ms timeout and properties', function (done) {
+      mm.error(fs, 'readFile', '500ms timeout', { code: 'ENOENT' }, 500);
+      var start = Date.now();
+      fs.readFile('/etc/hosts', 'utf8', function (err, data) {
+        var use = Date.now() - start;
+        should.exist(err);
+        err.name.should.equal('MockError');
+        err.message.should.equal('500ms timeout');
+        err.code.should.equal('ENOENT');
         should.not.exist(data);
         use.should.above(490);
         done();
