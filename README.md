@@ -66,7 +66,7 @@ yield* foo.get(); // should throw error
 
 ## API
 
-### .error(module, propertyName, errerMessage)
+### .error(module, propertyName, errerMessage, errorProperties)
 
 ```js
 var mm = require('mm');
@@ -121,6 +121,48 @@ mm.datas(urllib, 'request', [new Buffer('data'), {headers: { foo: 'bar' }}]);
 
 urllib.request = function (args..., callback) {
   callback(null, new Buffer('data'), {headers: { foo: 'bar' }});
+}
+```
+
+### .syncError(module, propertyName, errerMessage, errorProperties)
+
+```js
+var mm = require('mm');
+var fs = require('fs');
+
+mm.syncError(fs, 'readFileSync', 'mock fs.readFile return error', {code: 'ENOENT'});
+
+// equals
+
+fs.readFileSync = function (args...) {
+  var err = new Error('mock fs.readFile return error');
+  err.code = 'ENOENT';
+  throw err;
+};
+
+```
+
+### .syncData(module, propertyName, value)
+
+```js
+mm.syncData(fs, 'readFileSync', new Buffer('some content'));
+
+// equals
+
+fs.readFileSync = function (args...) {
+  return new Buffer('some content');
+};
+```
+
+## .syncEmpty
+
+```js
+mm.syncEmpty(fs, 'readFileSync');
+
+// equals
+
+fs.readFileSync = function (args...) {
+  return;
 }
 ```
 
