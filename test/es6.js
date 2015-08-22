@@ -73,6 +73,27 @@ describe('test/es6.test.js', function () {
       } catch (err) {
         err.message.should.equal('new foo error');
       }
+
+      mm.error(foo, 'getValue', new Error('new foo error'), {status: 500});
+      try {
+        yield* foo.getValue();
+        throw new Error('should not run this');
+      } catch (err) {
+        err.message.should.equal('new foo error');
+        err.status.should.equal(500);
+      }
+
+      mm.error(foo, 'getValue', new Error('new foo error'), {status: 500}, 100);
+      try {
+        var start = Date.now();
+        yield* foo.getValue();
+        throw new Error('should not run this');
+      } catch (err) {
+        var use = Date.now() - start;
+        err.message.should.equal('new foo error');
+        err.status.should.equal(500);
+        use.should.above(90);
+      }
     });
   });
 });
