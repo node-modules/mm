@@ -1,4 +1,11 @@
 
+1.3.0 / 2015-08-22
+==================
+
+ * readme: add sync methods and error properties
+ * feat: mock error support props
+ * chore: use npm scripts
+
 1.2.0 / 2015-08-16
 ==================
 
