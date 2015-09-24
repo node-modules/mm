@@ -1,4 +1,10 @@
 
+1.3.4 / 2015-09-24
+==================
+
+ * test: use codecov.io
+ * feat: support mock process.env.KEY
+
 1.3.3 / 2015-09-17
 ==================
 
