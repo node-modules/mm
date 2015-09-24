@@ -51,9 +51,7 @@ describe('mm.test.js', function () {
     });
   });
 
-  afterEach(function () {
-    mm.restore();
-  });
+  afterEach(mm.restore);
 
   describe('datas(), data(), empty()', function () {
     it('should mock foo.getMultiValues() return `b1, b2, b3`', function (done) {
@@ -759,6 +757,33 @@ describe('mm.test.js', function () {
   });
 
   describe('mm()', function () {
+    var nodeMajorVersion = Number(process.versions.node.split('.')[0]);
+
+    it('should mock process.env.KEY work', function () {
+      should.not.exist(process.env.NODE_ENV);
+      mm(process.env, 'NODE_ENV', 'test');
+      process.env.NODE_ENV.should.equal('test');
+      mm.restore();
+
+      if (nodeMajorVersion >= 4) {
+        should.not.exist(process.env.NODE_ENV);
+      } else {
+        process.env.NODE_ENV.should.equal('');
+      }
+
+      mm(process.env, 'NODE_ENV', 'test');
+      process.env.NODE_ENV.should.equal('test');
+      mm(process.env, 'NODE_ENV', 'production');
+      process.env.NODE_ENV.should.equal('production');
+      mm.restore();
+
+      if (nodeMajorVersion >= 4) {
+        should.not.exist(process.env.NODE_ENV);
+      } else {
+        process.env.NODE_ENV.should.equal('');
+      }
+    });
+
     it('should mm() just like muk()', function (done) {
       mm(fs, 'readFile', function (filename, callback) {
         process.nextTick(function () {
