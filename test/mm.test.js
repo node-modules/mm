@@ -22,6 +22,8 @@ var ChunkStream = require('chunkstream');
 var mm = require('../');
 var foo = require('./foo');
 
+var nodeMajorVersion = Number(process.versions.node.split('.')[0]);
+
 describe('mm.test.js', function () {
 
   var port = null;
@@ -757,7 +759,6 @@ describe('mm.test.js', function () {
   });
 
   describe('mm()', function () {
-    var nodeMajorVersion = Number(process.versions.node.split('.')[0]);
 
     it('should mock process.env.KEY work', function () {
       should.not.exist(process.env.NODE_ENV);
@@ -828,6 +829,38 @@ describe('mm.test.js', function () {
           done();
         });
       });
+    });
+  });
+
+  describe('mm(process.env, "HOME")', function() {
+    before(function() {
+      this.HOME = process.env.HOME;
+    });
+
+    beforeEach(function() {
+      mm(process.env, 'TEST_ENV', 'foo');
+    });
+
+    it('should mock HOME env', function() {
+      process.env.HOME.should.equal(this.HOME);
+      mm(process.env, 'HOME', '/tmp/home');
+      process.env.HOME.should.equal('/tmp/home');
+      process.env.TEST_ENV.should.equal('foo');
+    });
+
+    it('should mock HOME env to another value', function() {
+      process.env.HOME.should.equal(this.HOME);
+      mm(process.env, 'HOME', '/tmp/home2');
+      process.env.HOME.should.equal('/tmp/home2');
+      process.env.TEST_ENV.should.equal('foo');
+      mm.restore();
+      process.env.HOME.should.equal(this.HOME);
+
+      if (nodeMajorVersion >= 4) {
+        should.not.exist(process.env.TEST_ENV);
+      } else {
+        process.env.TEST_ENV.should.equal('');
+      }
     });
   });
 });
