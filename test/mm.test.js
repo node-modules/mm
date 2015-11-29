@@ -862,6 +862,60 @@ describe('mm.test.js', function() {
       should.exists(mm.isMocked);
     });
   });
+
+  describe('restore', function() {
+    let orgRequest;
+    beforeEach(function() {
+      orgRequest = http.request;
+    });
+    afterEach(function() {
+      http.request = orgRequest;
+    });
+    it('should not alter the http.request function withou http(s) used', function() {
+      const obj = {
+        foo() {
+          return 'original foo';
+        },
+      };
+      mm(obj, 'foo', function() {
+        return 'mocked foo';
+      });
+      obj.foo().should.equal('mocked foo');
+
+      // Manually override the http.request for certain purpose.
+      http.request = function() {
+        throw new Error('Never want to send request out');
+      };
+      mm.restore();
+      try {
+        http.get({ path: '/foo' }, function() {});
+      } catch (e) {
+        e.message.should.equal('Never want to send request out');
+      }
+    });
+    it('should be correct even if http.request used twice', function() {
+      [ 'http', 'https' ].forEach(function(modName) {
+        const mockURLFoo = '/foo';
+        const mockURLBar = '/bar';
+        const mockResData = 'mock data';
+        const mockResHeaders = { server: 'mock server' };
+        const mod = modName === 'http' ? http : https;
+        // Manually override the http(s).request for certain purpose.
+        mod.request = function() {
+          throw new Error('Never want to send request out');
+        };
+        mm[modName].request(mockURLFoo, mockResData, mockResHeaders);
+        mm[modName].request(mockURLBar, mockResData, mockResHeaders);
+
+        mm.restore();
+        try {
+          mod.get({ path: '/baz' }, function() {});
+        } catch (e) {
+          e.message.should.equal('Never want to send request out');
+        }
+      });
+    });
+  });
 });
 
 const enable = require('enable');
