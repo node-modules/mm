@@ -32,7 +32,7 @@ $ npm install mm --save-dev
 var mm = require('mm');
 var fs = require('fs');
 
-mm(fs, 'readFileSync', function (filename) {
+mm(fs, 'readFileSync', function(filename) {
   return filename + ' content';
 });
 
@@ -235,18 +235,13 @@ req.on('error', function (err) {
 }
 ```
 
-## Authors
-
-* fengmk2 <https://github.com/fengmk2>
-* dead-horse <https://github.com/dead-horse>
-* alsotang <https://github.com/alsotang>
-
 ## License
 
+```
 This software is licensed under the MIT License.
 
 Copyright (C) 2012 - 2014 fengmk2 <fengmk2@gmail.com>
-Copyright (C) 2015 node-modules
+Copyright (C) 2015 - 2016 node-modules
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -265,3 +260,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+```
