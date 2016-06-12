@@ -1,4 +1,10 @@
 
+1.4.0 / 2016-06-12
+==================
+
+  * deps: upgrade muk (#26)
+  * feat: remove EventEmitter from 'event' module
+
 1.3.5 / 2015-09-29
 ==================
 
