@@ -22,7 +22,6 @@ var ChunkStream = require('chunkstream');
 var mm = require('../');
 var foo = require('./foo');
 
-var nodeMajorVersion = Number(process.versions.node.split('.')[0]);
 
 describe('mm.test.js', function () {
 
@@ -280,7 +279,7 @@ describe('mm.test.js', function () {
     it('should mock empty ok', function () {
       var foo = require('./foo');
       mm.syncEmpty(foo, 'mirror');
-      should(foo.mirror('input')).not.exist;
+      should.not.exist(foo.mirror('input'));
     });
   });
 
@@ -491,7 +490,7 @@ describe('mm.test.js', function () {
           host: 'npmjs.org',
           path: '/bar/foo'
         }, function (res) {
-          res.should.status(201);
+          res.statusCode.should.eql(201);
           res.headers.should.eql(mockResHeaders);
           res.setEncoding('utf8');
           var body = '';
@@ -668,8 +667,8 @@ describe('mm.test.js', function () {
         var req = mod.get({
           path: '/res'
         }, function (res) {
-          res.should.status(200);
-          res.should.have.header('server', 'MockMateServer');
+          res.statusCode.should.eql(200);
+          res.headers.server.should.eql('MockMateServer');
           done();
         });
         req.on('error', function (err) {
@@ -690,8 +689,8 @@ describe('mm.test.js', function () {
         var req = mod.get({
           path: '/res'
         }, function (res) {
-          res.should.status(200);
-          res.should.have.header('server', 'MockMateServer');
+          res.statusCode.should.eql(200);
+          res.headers.server.should.eql('MockMateServer');
           done();
         });
         req.on('error', function (err) {
@@ -766,11 +765,7 @@ describe('mm.test.js', function () {
       process.env.NODE_ENV.should.equal('test');
       mm.restore();
 
-      if (nodeMajorVersion >= 4) {
-        should.not.exist(process.env.NODE_ENV);
-      } else {
-        process.env.NODE_ENV.should.equal('');
-      }
+      should.not.exist(process.env.NODE_ENV);
 
       mm(process.env, 'NODE_ENV', 'test');
       process.env.NODE_ENV.should.equal('test');
@@ -778,11 +773,7 @@ describe('mm.test.js', function () {
       process.env.NODE_ENV.should.equal('production');
       mm.restore();
 
-      if (nodeMajorVersion >= 4) {
-        should.not.exist(process.env.NODE_ENV);
-      } else {
-        process.env.NODE_ENV.should.equal('');
-      }
+      should.not.exist(process.env.NODE_ENV);
     });
 
     it('should mm() just like muk()', function (done) {
@@ -824,7 +815,7 @@ describe('mm.test.js', function () {
         should.exists(err);
         mm.restore();
         fs.readFile(__filename, function (err, data) {
-          should.not.exists(err);
+          should.not.exist(err);
           data.toString().should.containEql('mm()');
           done();
         });
@@ -854,13 +845,16 @@ describe('mm.test.js', function () {
       process.env.HOME.should.equal('/tmp/home2');
       process.env.TEST_ENV.should.equal('foo');
       mm.restore();
+
       process.env.HOME.should.equal(this.HOME);
 
-      if (nodeMajorVersion >= 4) {
-        should.not.exist(process.env.TEST_ENV);
-      } else {
-        process.env.TEST_ENV.should.equal('');
-      }
+      should.not.exist(process.env.TEST_ENV);
+    });
+  });
+
+  describe('isMocked', function() {
+    it('should exist', function() {
+      should.exists(mm.isMocked);
     });
   });
 });
