@@ -486,12 +486,17 @@ describe('mm.test.js', function () {
         var mockResData = fs.createReadStream(__filename);
         var mockResHeaders = { server: 'mock server', statusCode: 201 };
         mm[modName].request('', mockResData, mockResHeaders);
-        mod.get({
-          host: 'npmjs.org',
-          path: '/bar/foo'
-        }, function (res) {
+        var length = 5;
+        done = pedding(length, done);
+        for (var i = 0; i < length; i++) {
+          mod.get({
+            host: 'npmjs.org',
+            path: '/bar/foo'
+          }, onResponse);
+        }
+        function onResponse (res) {
           res.statusCode.should.eql(201);
-          res.headers.should.eql(mockResHeaders);
+          res.headers.should.eql({ server: 'mock server' });
           res.setEncoding('utf8');
           var body = '';
           res.on('data', function (chunk) {
@@ -502,7 +507,7 @@ describe('mm.test.js', function () {
             body.should.equal(fs.readFileSync(__filename, 'utf8'));
             done();
           });
-        });
+        }
       });
 
       it('should mock ' + modName + '.request({host: "cnodejs.org"}) 500ms response delay', function (done) {
