@@ -14,41 +14,43 @@
  * Module dependencies.
  */
 
-var mm = require('../');
+const mm = require('../');
 
-describe('test/es6.test.js', function () {
-  var foo = {
-    getMultiValues: function* () {
-      return [1, 2, 3];
+describe('test/es6.test.js', function() {
+  const foo = {
+    * getMultiValues() {
+      return [ 1, 2, 3 ];
     },
-    getValue: function* () {
+    * getValue() {
       return 1;
-    }
+    },
   };
 
   afterEach(mm.restore);
 
-  describe('datas(), data()', function () {
+  describe('datas(), data()', function() {
     it('should mock generator function', function* () {
+      let datas;
       mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ]);
-      var datas = yield* foo.getMultiValues();
+      datas = yield* foo.getMultiValues();
       datas.should.eql([ 'b1', 'b2', 'b3' ]);
 
       mm.datas(foo, 'getMultiValues', 1);
-      var datas = yield* foo.getMultiValues();
+      datas = yield* foo.getMultiValues();
       datas.should.equal(1);
 
+      let data;
       mm.data(foo, 'getValue', 2, 500);
-      var data = yield* foo.getValue();
+      data = yield* foo.getValue();
       data.should.equal(2);
 
       mm.restore();
-      var data = yield* foo.getValue();
+      data = yield* foo.getValue();
       data.should.equal(1);
     });
   });
 
-  describe('error()', function () {
+  describe('error()', function() {
     it('should mock error', function* () {
       mm.error(foo, 'getValue');
       try {
@@ -74,7 +76,7 @@ describe('test/es6.test.js', function () {
         err.message.should.equal('new foo error');
       }
 
-      mm.error(foo, 'getValue', new Error('new foo error'), {status: 500});
+      mm.error(foo, 'getValue', new Error('new foo error'), { status: 500 });
       try {
         yield* foo.getValue();
         throw new Error('should not run this');
@@ -83,13 +85,14 @@ describe('test/es6.test.js', function () {
         err.status.should.equal(500);
       }
 
-      mm.error(foo, 'getValue', new Error('new foo error'), {status: 500}, 100);
+      mm.error(foo, 'getValue', new Error('new foo error'), { status: 500 }, 100);
+      let start;
       try {
-        var start = Date.now();
+        start = Date.now();
         yield* foo.getValue();
         throw new Error('should not run this');
       } catch (err) {
-        var use = Date.now() - start;
+        const use = Date.now() - start;
         err.message.should.equal('new foo error');
         err.status.should.equal(500);
         use.should.above(90);
