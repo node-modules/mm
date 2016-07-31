@@ -1,6 +1,6 @@
 {
   "name": "mm",
-  "version": "1.5.1",
+  "version": "2.0.0",
   "description": "mock mate, mock http request, fs access and so on.",
   "main": "index.js",
   "files": [
@@ -49,7 +49,7 @@
     "test"
   ],
   "engines": {
-    "node": ">=0.12.0"
+    "node": ">=4"
   },
   "author": "fengmk2 <fengmk2@gmail.com> (http://fengmk2.com)",
   "license": "MIT"

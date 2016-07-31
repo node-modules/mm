@@ -20,6 +20,8 @@ mm
 
 An simple but flexible **mock(or say stub)** package, mock mate.
 
+__mm@2 only support node v4.0+.__
+
 ## Install
 
 ```bash
