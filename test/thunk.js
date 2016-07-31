@@ -14,18 +14,18 @@
  * Module dependencies.
  */
 
-var thunkify = require('thunkify-wrap');
-var mm = require('..');
+const thunkify = require('thunkify-wrap');
+const mm = require('..');
 
-describe('test/thunk.test.js', function () {
-  var foo = {
-    getMultiValues: thunkify(function (arg, callback) {
-      setImmediate(function () {
+describe('test/thunk.test.js', function() {
+  const foo = {
+    getMultiValues: thunkify(function(arg, callback) {
+      setImmediate(function() {
         callback(null, 1, 2, 3);
       });
     }),
-    getValue: thunkify(function (arg, callback) {
-      setImmediate(function () {
+    getValue: thunkify(function(arg, callback) {
+      setImmediate(function() {
         callback(null, 1);
       });
     }),
@@ -33,27 +33,27 @@ describe('test/thunk.test.js', function () {
 
   afterEach(mm.restore);
 
-  describe('datas(), data()', function () {
+  describe('datas(), data()', function() {
     it('should mock generator function', function* () {
       mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ]);
-      var datas = yield foo.getMultiValues();
+      let datas = yield foo.getMultiValues();
       datas.should.eql([ 'b1', 'b2', 'b3' ]);
 
       mm.datas(foo, 'getMultiValues', 1);
-      var datas = yield foo.getMultiValues('key');
+      datas = yield foo.getMultiValues('key');
       datas.should.equal(1);
 
       mm.data(foo, 'getValue', 2);
-      var data = yield foo.getValue('key');
+      let data = yield foo.getValue('key');
       data.should.equal(2);
 
       mm.restore();
-      var data = yield foo.getValue('key');
+      data = yield foo.getValue('key');
       data.should.equal(1);
     });
   });
 
-  describe('error()', function () {
+  describe('error()', function() {
     it('should mock error', function* () {
       mm.error(foo, 'getValue');
       try {
