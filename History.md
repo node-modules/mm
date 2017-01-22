@@ -1,4 +1,9 @@
 
+2.0.1 / 2017-01-22
+==================
+
+  * fix: Only restore the http/https request when used.
+
 2.0.0 / 2016-07-31
 ==================
 
