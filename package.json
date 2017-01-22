@@ -8,34 +8,31 @@
     "index.js"
   ],
   "scripts": {
-    "test": "npm run lint && mocha -R spec -t 5000 -r should-http -r thunk-mocha test/*.test.js",
-    "test-cov": "npm run lint && istanbul cover node_modules/.bin/_mocha -- -t 5000 -r should-http -r thunk-mocha test/*.test.js",
+    "test": "npm run lint && egg-bin test",
+    "ci": "npm run lint && egg-bin cov",
     "lint": "eslint --fix lib test index.js",
-    "autod": "autod -w --prefix '~'"
+    "autod": "autod -w --prefix '^'"
   },
   "dependencies": {
-    "co-sleep": "~0.0.1",
-    "enable": "~3.3.0",
     "is-type-of": "^1.0.0",
-    "muk": "^0.5.0",
-    "semver": "~4.3.4",
-    "thenify": "^3.1.0"
+    "ko-sleep": "^1.0.2",
+    "muk-prop": "^0.5.3",
+    "semver": "^5.3.0",
+    "thenify": "^3.2.1"
   },
   "devDependencies": {
     "autod": "2",
-    "chunkstream": "*",
-    "co": "4",
-    "thunk-mocha": "1",
-    "eslint-config-egg": "3",
+    "chunkstream": "^0.0.1",
+    "co": "^4.6.0",
+    "egg-bin": "^2.0.1",
+    "egg-ci": "^1.1.0",
     "eslint": "3",
-    "istanbul": "0",
-    "mocha": "beta",
-    "mocha-lcov-reporter": "*",
+    "eslint-config-egg": "3",
     "node-patch": "*",
-    "pedding": "1",
-    "should": "6",
-    "should-http": "*",
-    "thunkify-wrap": "1"
+    "pedding": "^1.1.0",
+    "should": "^11.1.2",
+    "thunkify-wrap": "^1.0.4",
+    "urllib": "^2.19.0"
   },
   "homepage": "http://github.com/node-modules/mm",
   "repository": {
@@ -49,7 +46,10 @@
     "test"
   ],
   "engines": {
-    "node": ">=4"
+    "node": ">=4.0.0"
+  },
+  "ci": {
+    "version": "4, 6, 7"
   },
   "author": "fengmk2 <fengmk2@gmail.com> (http://fengmk2.com)",
   "license": "MIT"

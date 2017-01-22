@@ -1,20 +1,6 @@
-/**!
- * mm - test/co.js
- *
- * Copyright(c) node-modules and other contributors.
- * MIT Licensed
- *
- * Authors:
- *   fengmk2 <fengmk2@gmail.com> (http://fengmk2.com)
- */
-
 'use strict';
 
-/**
- * Module dependencies.
- */
-
-const urllib = require('co-urllib');
+const urllib = require('urllib');
 const co = require('co');
 const fs = require('fs');
 const mm = require('../');

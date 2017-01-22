@@ -1,19 +1,9 @@
-/**!
- * mm - test/mm.test.js
- *
- * Copyright(c) 2012 - 2014 fengmk2 <fengmk2@gmail.com>
- * MIT Licensed
- */
-
 'use strict';
 
-/**
- * Module dependencies.
- */
-
+require('should');
 const path = require('path');
 const fs = require('fs');
-const should = require('should');
+const assert = require('assert');
 const http = require('http');
 const https = require('https');
 const child_process = require('child_process');
@@ -22,8 +12,7 @@ const ChunkStream = require('chunkstream');
 const mm = require('../');
 const foo = require('./foo');
 
-
-describe('mm.test.js', function() {
+describe('mm.test.js', () => {
 
   let port = null;
   let sslPort = null;
@@ -58,7 +47,7 @@ describe('mm.test.js', function() {
     it('should mock foo.getMultiValues() return `b1, b2, b3`', function(done) {
       mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ]);
       foo.getMultiValues(function(err, a1, a2, a3) {
-        should.not.exist(err);
+        assert(!err);
         a1.should.equal('b1');
         a2.should.equal('b2');
         a3.should.equal('b3');
@@ -69,7 +58,7 @@ describe('mm.test.js', function() {
     it('should mock foo.getMultiValues() return `b1, b2, b3` with timeout', function(done) {
       mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ], 10);
       foo.getMultiValues(function(err, a1, a2, a3) {
-        should.not.exist(err);
+        assert(!err);
         a1.should.equal('b1');
         a2.should.equal('b2');
         a3.should.equal('b3');
@@ -80,10 +69,10 @@ describe('mm.test.js', function() {
     it('should mock foo.getMultiValues() return `b1`', function(done) {
       mm.datas(foo, 'getMultiValues', [ 'b1' ]);
       foo.getMultiValues(function(err, a1, a2, a3) {
-        should.not.exist(err);
-        a1.should.equal('b1');
-        should.not.exist(a2);
-        should.not.exist(a3);
+        assert(!err);
+        assert(a1 === 'b1');
+        assert(!a2);
+        assert(!a3);
         done();
       });
     });
@@ -91,10 +80,10 @@ describe('mm.test.js', function() {
     it('should mock foo.getMultiValues() with "b1" return `b1`', function(done) {
       mm.datas(foo, 'getMultiValues', 'b1');
       foo.getMultiValues(function(err, a1, a2, a3) {
-        should.not.exist(err);
+        assert(!err);
         a1.should.equal('b1');
-        should.not.exist(a2);
-        should.not.exist(a3);
+        assert(!a2);
+        assert(!a3);
         done();
       });
     });
@@ -102,10 +91,10 @@ describe('mm.test.js', function() {
     it('should mock foo.getMultiValues() using data("b1")', function(done) {
       mm.data(foo, 'getMultiValues', 'b1');
       foo.getMultiValues(function(err, a1, a2, a3) {
-        should.not.exist(err);
+        assert(!err);
         a1.should.equal('b1');
-        should.not.exist(a2);
-        should.not.exist(a3);
+        assert(!a2);
+        assert(!a3);
         done();
       });
     });
@@ -113,7 +102,7 @@ describe('mm.test.js', function() {
     it('should mock foo.get() return [b1, b2]', function(done) {
       mm.data(foo, 'get', [ 'b1', 'b2' ]);
       foo.get('q1', function(err, data) {
-        should.not.exist(err);
+        assert(!err);
         data.should.eql([ 'b1', 'b2' ]);
         done();
       });
@@ -123,12 +112,12 @@ describe('mm.test.js', function() {
       mm.data(foo, 'get', [ 'b1', 'b2' ]);
       done = pedding(2, done);
       foo.get('q1', function(err, data) {
-        should.not.exist(err);
+        assert(!err);
         data.should.eql([ 'b1', 'b2' ]);
         done();
       });
       foo.get('q1', function(err, data) {
-        should.not.exist(err);
+        assert(!err);
         data.should.eql([ 'b1', 'b2' ]);
         done();
       });
@@ -137,8 +126,8 @@ describe('mm.test.js', function() {
     it('should mock foo.get() return empty', function(done) {
       mm.empty(foo, 'get');
       foo.get('q1', function(err, data) {
-        should.not.exist(err);
-        should.not.exist(data);
+        assert(!err);
+        assert(!data);
         done();
       });
     });
@@ -149,16 +138,16 @@ describe('mm.test.js', function() {
     it('should mock fs.readFile return error', function(done) {
       mm.error(fs, 'readFile', 'can not read file');
       fs.readFile('/etc/hosts', 'utf8', function(err, data) {
-        should.exist(err);
+        assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('can not read file');
-        should.not.exist(data);
+        assert(!data);
 
         mm.restore();
 
         fs.readFile('/etc/hosts', 'utf8', function(err, data) {
-          should.not.exist(err);
-          should.exist(data);
+          assert(!err);
+          assert(data);
           data.should.containEql('127.0.0.1');
           done();
         });
@@ -171,10 +160,10 @@ describe('mm.test.js', function() {
       err.name = 'CustomError';
       mm.error(fs, 'readFile', err);
       fs.readFile('/etc/hosts', 'utf8', function(err, data) {
-        should.exist(err);
+        assert(err);
         err.name.should.equal('CustomError');
         err.message.should.equal('mock error instance');
-        should.not.exist(data);
+        assert(!data);
         done();
       });
     });
@@ -182,10 +171,10 @@ describe('mm.test.js', function() {
     it('should mock error with empty error', function(done) {
       mm.error(fs, 'readFile');
       fs.readFile('/etc/hosts', 'utf8', function(err, data) {
-        should.exist(err);
+        assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('mm mock error');
-        should.not.exist(data);
+        assert(!data);
         done();
       });
     });
@@ -193,11 +182,11 @@ describe('mm.test.js', function() {
     it('should mock error with properties', function(done) {
       mm.error(fs, 'readFile', 'mm mock error', { code: 'ENOENT', name: 'MockError' });
       fs.readFile('/etc/hosts', 'utf8', function(err, data) {
-        should.exist(err);
+        assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('mm mock error');
         err.code.should.equal('ENOENT');
-        should.not.exist(data);
+        assert(!data);
         done();
       });
     });
@@ -207,10 +196,10 @@ describe('mm.test.js', function() {
       const start = Date.now();
       fs.readFile('/etc/hosts', 'utf8', function(err, data) {
         const use = Date.now() - start;
-        should.exist(err);
+        assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('500ms timeout');
-        should.not.exist(data);
+        assert(!data);
         use.should.above(490);
         done();
       });
@@ -221,11 +210,11 @@ describe('mm.test.js', function() {
       const start = Date.now();
       fs.readFile('/etc/hosts', 'utf8', function(err, data) {
         const use = Date.now() - start;
-        should.exist(err);
+        assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('500ms timeout');
         err.code.should.equal('ENOENT');
-        should.not.exist(data);
+        assert(!data);
         use.should.above(490);
         done();
       });
@@ -237,24 +226,24 @@ describe('mm.test.js', function() {
 
       mm.error(foo, 'get', 'mock foo.get error');
       foo.get('q1', function(err, data) {
-        should.exist(err);
+        assert(err);
         err.message.should.equal('mock foo.get error');
-        should.not.exist(data);
+        assert(!data);
         done();
       });
 
       foo.get('q2', function(err, data) {
-        should.exist(err);
+        assert(err);
         err.message.should.equal('mock foo.get error');
-        should.not.exist(data);
+        assert(!data);
         done();
       }, { h1: 'h1' }, false);
 
       mm.error(foo, 'check', 'mock foo.check error');
       foo.check(function(err, data) {
-        should.exist(err);
+        assert(err);
         err.message.should.equal('mock foo.check error');
-        should.not.exist(data);
+        assert(!data);
         done();
       }, { h1: 'h1' }, false);
     });
@@ -279,7 +268,7 @@ describe('mm.test.js', function() {
     it('should mock empty ok', function() {
       const foo = require('./foo');
       mm.syncEmpty(foo, 'mirror');
-      should.not.exist(foo.mirror('input'));
+      assert(!foo.mirror('input'));
     });
   });
 
@@ -390,7 +379,7 @@ describe('mm.test.js', function() {
           res.headers.should.eql(mockResHeaders);
           let body = '';
           res.on('data', function(chunk) {
-            should.ok(Buffer.isBuffer(chunk));
+            assert(Buffer.isBuffer(chunk));
             body += chunk.toString();
           });
           res.on('end', function() {
@@ -588,7 +577,7 @@ describe('mm.test.js', function() {
           });
         });
         req.on('error', function(err) {
-          should.exist(err);
+          assert(err);
           err.message.should.equal('socket hang up');
           done();
         });
@@ -608,7 +597,7 @@ describe('mm.test.js', function() {
           done(new Error('should not call this'));
         });
         req.on('error', function(err) {
-          should.exist(err);
+          assert(err);
           err.message.should.equal('socket hang up');
           done();
         });
@@ -639,7 +628,7 @@ describe('mm.test.js', function() {
           done(new Error('should not call this'));
         });
         req.on('error', function(err) {
-          should.exist(err);
+          assert(err);
           err.name.should.equal('MockHttpRequestError');
           err.message.should.equal('mock req error');
           done();
@@ -677,7 +666,7 @@ describe('mm.test.js', function() {
           done();
         });
         req.on('error', function(err) {
-          should.exist(err);
+          assert(err);
           err.name.should.equal('MockHttpResponseError');
           err.message.should.equal('mock res error');
           done();
@@ -699,7 +688,7 @@ describe('mm.test.js', function() {
           done();
         });
         req.on('error', function(err) {
-          should.exist(err);
+          assert(err);
           err.name.should.equal('MockHttpResponseError');
           err.message.should.equal('mock res error with 500ms delay');
           const use = Date.now() - start;
@@ -720,7 +709,7 @@ describe('mm.test.js', function() {
           done(new Error('should not call this'));
         });
         req.on('error', function(err) {
-          should.exist(err);
+          assert(err);
           err.name.should.equal('Error');
           err.message.should.equal('socket hang up');
           const use = Date.now() - start;
@@ -756,7 +745,7 @@ describe('mm.test.js', function() {
       mm.restore();
       ls = child_process.spawn('ls', [ '-a' ]);
       ls.on('exit', function(code) {
-        code.should.equal(0);
+        assert(code === 0);
         done();
       });
     });
@@ -765,20 +754,20 @@ describe('mm.test.js', function() {
   describe('mm()', function() {
 
     it('should mock process.env.KEY work', function() {
-      should.not.exist(process.env.NODE_ENV);
-      mm(process.env, 'NODE_ENV', 'test');
-      process.env.NODE_ENV.should.equal('test');
+      const orginalEnv = process.env.NODE_ENV;
+      mm(process.env, 'NODE_ENV', 'test2');
+      process.env.NODE_ENV.should.equal('test2');
       mm.restore();
 
-      should.not.exist(process.env.NODE_ENV);
+      assert(process.env.NODE_ENV === orginalEnv);
 
-      mm(process.env, 'NODE_ENV', 'test');
-      process.env.NODE_ENV.should.equal('test');
+      mm(process.env, 'NODE_ENV', 'test2');
+      process.env.NODE_ENV.should.equal('test2');
       mm(process.env, 'NODE_ENV', 'production');
       process.env.NODE_ENV.should.equal('production');
       mm.restore();
 
-      should.not.exist(process.env.NODE_ENV);
+      assert(process.env.NODE_ENV === orginalEnv);
     });
 
     it('should mm() just like muk()', function(done) {
@@ -788,12 +777,12 @@ describe('mm.test.js', function() {
         });
       });
       fs.readFile(__filename, function(err, data) {
-        should.not.exist(err);
+        assert(!err);
         data.should.be.an.instanceof(Buffer);
         data.toString().should.equal('filename: ' + __filename);
         mm.restore();
         fs.readFile(__filename, function(err, data) {
-          should.not.exist(err);
+          assert(!err);
           data.should.be.an.instanceof(Buffer);
           data.toString().should.containEql('mm()');
           done();
@@ -812,16 +801,16 @@ describe('mm.test.js', function() {
         fs.readFileSync(__filename);
       }).should.throw('test error');
       mm.restore();
-      fs.readFileSync(__filename).toString().should.containEql('mm()');
+      assert(fs.readFileSync(__filename).toString().includes('mm()'));
 
       mm.error(fs, 'readFile');
       mm.error(fs, 'readFile');
       fs.readFile(__filename, function(err) {
-        should.exists(err);
+        assert(err);
         mm.restore();
         fs.readFile(__filename, function(err, data) {
-          should.not.exist(err);
-          data.toString().should.containEql('mm()');
+          assert(!err);
+          assert(data.toString().includes('mm()'));
           done();
         });
       });
@@ -853,13 +842,13 @@ describe('mm.test.js', function() {
 
       process.env.HOME.should.equal(this.HOME);
 
-      should.not.exist(process.env.TEST_ENV);
+      assert(!process.env.TEST_ENV);
     });
   });
 
   describe('isMocked', function() {
     it('should exist', function() {
-      should.exists(mm.isMocked);
+      assert(mm.isMocked);
     });
   });
 

@@ -1,18 +1,4 @@
-/**!
- * mm - test/thunk.test.js
- *
- * Copyright(c) fengmk2 and other contributors.
- * MIT Licensed
- *
- * Authors:
- *   dead_horse <dead_horse@qq.com>
- */
-
 'use strict';
-
-/**
- * Module dependencies.
- */
 
 const thunkify = require('thunkify-wrap');
 const mm = require('..');
