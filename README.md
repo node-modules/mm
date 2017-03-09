@@ -92,7 +92,7 @@ mm.data(fs, 'readFile', new Buffer('some content'));
 
 // equals
 
-fs.readFile = function (args..., callback) {
+fs.readFile = function (...args, callback) {
   callback(null, new Buffer('some content'))
 };
 ```
@@ -104,7 +104,7 @@ mm.empty(mysql, 'query');
 
 // equals
 
-mysql.query = function (args..., callback) {
+mysql.query = function (...args, callback) {
   callback();
 }
 ```
@@ -116,7 +116,7 @@ mm.datas(urllib, 'request', [new Buffer('data'), {headers: { foo: 'bar' }}]);
 
 // equals
 
-urllib.request = function (args..., callback) {
+urllib.request = function (...args, callback) {
   callback(null, new Buffer('data'), {headers: { foo: 'bar' }});
 }
 ```
@@ -131,7 +131,7 @@ mm.syncError(fs, 'readFileSync', 'mock fs.readFile return error', {code: 'ENOENT
 
 // equals
 
-fs.readFileSync = function (args...) {
+fs.readFileSync = function (...args) {
   var err = new Error('mock fs.readFile return error');
   err.code = 'ENOENT';
   throw err;
@@ -146,7 +146,7 @@ mm.syncData(fs, 'readFileSync', new Buffer('some content'));
 
 // equals
 
-fs.readFileSync = function (args...) {
+fs.readFileSync = function (...args) {
   return new Buffer('some content');
 };
 ```
@@ -158,7 +158,7 @@ mm.syncEmpty(fs, 'readFileSync');
 
 // equals
 
-fs.readFileSync = function (args...) {
+fs.readFileSync = function (...args) {
   return;
 }
 ```
