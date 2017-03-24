@@ -4,8 +4,8 @@
   "description": "mock mate, mock http request, fs access and so on.",
   "main": "index.js",
   "files": [
-    "lib",
-    "index.js"
+    "index.js",
+    "lib"
   ],
   "scripts": {
     "test": "npm run lint && egg-bin test",
@@ -16,23 +16,24 @@
   "dependencies": {
     "is-type-of": "^1.0.0",
     "ko-sleep": "^1.0.2",
-    "muk-prop": "^0.5.3",
+    "muk-prop": "^1.0.0",
     "semver": "^5.3.0",
     "thenify": "^3.2.1"
   },
   "devDependencies": {
-    "autod": "2",
+    "autod": "^2.8.0",
     "chunkstream": "^0.0.1",
     "co": "^4.6.0",
-    "egg-bin": "^2.0.1",
-    "egg-ci": "^1.1.0",
-    "eslint": "3",
-    "eslint-config-egg": "3",
+    "egg-bin": "^1.10.3",
+    "egg-ci": "^1.6.0",
+    "enable": "^3.3.0",
+    "eslint": "^3.18.0",
+    "eslint-config-egg": "^3.2.0",
     "node-patch": "*",
     "pedding": "^1.1.0",
-    "should": "^11.1.2",
+    "should": "^11.2.1",
     "thunkify-wrap": "^1.0.4",
-    "urllib": "^2.19.0"
+    "urllib": "^2.21.2"
   },
   "homepage": "http://github.com/node-modules/mm",
   "repository": {
