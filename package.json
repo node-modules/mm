@@ -33,7 +33,7 @@
     "node-patch": "*",
     "pedding": "1",
     "should": "6",
-    "should-http": "*",
+    "should-http": "~0.0.4",
     "thunkify-wrap": "1"
   },
   "homepage": "http://github.com/node-modules/mm",
