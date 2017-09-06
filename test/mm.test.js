@@ -877,7 +877,8 @@ describe('mm.test.js', () => {
       };
       mm.restore();
       try {
-        http.get({ path: '/foo' }, function() {});
+        http.request({ path: '/foo' }, function() {});
+        throw new Error('should not run this');
       } catch (e) {
         e.message.should.equal('Never want to send request out');
       }
@@ -898,7 +899,9 @@ describe('mm.test.js', () => {
 
         mm.restore();
         try {
-          mod.get({ path: '/baz' }, function() {});
+          const req = mod.request({ path: '/baz' }, function() {});
+          req.end();
+          throw new Error('should not run this');
         } catch (e) {
           e.message.should.equal('Never want to send request out');
         }
