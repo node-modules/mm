@@ -1,4 +1,14 @@
 
+2.1.1 / 2017-09-06
+==================
+
+**fixes**
+  * [[`ea1194c`](http://github.com/node-modules/mm/commit/ea1194c2c5fc34ee74c6a33776495ec2f8545f16)] - fix: should support http request mock on node8 (#38) (fengmk2 <<fengmk2@gmail.com>>)
+  * [[`007f053`](http://github.com/node-modules/mm/commit/007f053117bb11c3789d545c4ccd50e2a8237fd5)] - fix: README typo (#32) (HC Chen <<chceyes@gmail.com>>)
+
+**others**
+  * [[`0e818e3`](http://github.com/node-modules/mm/commit/0e818e3f6d977a07b43db03fa9735de5e8115612)] - test: fix test on node4 (#33) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 2.1.0 / 2017-01-25
 ==================
 

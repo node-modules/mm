@@ -484,16 +484,20 @@ describe('mm.test.js', () => {
           }, onResponse);
         }
         function onResponse(res) {
-          res.statusCode.should.eql(201);
+          res.statusCode.should.equal(201);
           res.headers.should.eql({ server: 'mock server' });
           res.setEncoding('utf8');
           let body = '';
           res.on('data', function(chunk) {
+            console.log('data emit: chunk size: %d', chunk.length);
             chunk.should.be.a.String;
             body += chunk;
           });
           res.on('end', function() {
-            body.should.equal(fs.readFileSync(__filename, 'utf8'));
+            console.log('end emit: body size: %d', body.length);
+            const content = fs.readFileSync(__filename, 'utf8');
+            body.length.should.equal(body.length);
+            body.should.equal(content);
             done();
           });
         }
@@ -877,7 +881,8 @@ describe('mm.test.js', () => {
       };
       mm.restore();
       try {
-        http.get({ path: '/foo' }, function() {});
+        http.request({ path: '/foo' }, function() {});
+        throw new Error('should not run this');
       } catch (e) {
         e.message.should.equal('Never want to send request out');
       }
@@ -898,7 +903,9 @@ describe('mm.test.js', () => {
 
         mm.restore();
         try {
-          mod.get({ path: '/baz' }, function() {});
+          const req = mod.request({ path: '/baz' }, function() {});
+          req.end();
+          throw new Error('should not run this');
         } catch (e) {
           e.message.should.equal('Never want to send request out');
         }
