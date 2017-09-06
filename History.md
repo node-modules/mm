@@ -1,4 +1,10 @@
 
+1.5.2 / 2017-09-06
+==================
+
+**fixes**
+  * [[`59099d5`](http://github.com/node-modules/mm/commit/59099d530b7c81056ce6429c639729183782ecd3)] - fix: use var instead of const (#37) (fengmk2 <<fengmk2@gmail.com>>)
+
 1.5.1 / 2016-07-21
 ==================
 
