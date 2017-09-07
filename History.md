@@ -1,4 +1,13 @@
 
+2.2.0 / 2017-09-07
+==================
+
+**features**
+  * [[`72e5478`](http://github.com/node-modules/mm/commit/72e54784c5c0c094da6c345ce65f50bbc31b5889)] - feat: use stream class to replace EventEmitter. (Qi Yu <<njuyuqi@gmail.com>>)
+
+**others**
+  * [[`eb0eaae`](http://github.com/node-modules/mm/commit/eb0eaae30989298988c1ea8f0024158dcc367ba2)] - test: add mock request pipe test case (fengmk2 <<fengmk2@gmail.com>>)
+
 2.1.1 / 2017-09-06
 ==================
 
