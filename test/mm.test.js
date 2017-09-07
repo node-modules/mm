@@ -1,6 +1,7 @@
 'use strict';
 
 require('should');
+const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const assert = require('assert');
@@ -9,6 +10,7 @@ const https = require('https');
 const child_process = require('child_process');
 const pedding = require('pedding');
 const ChunkStream = require('chunkstream');
+const uuid = require('uuid');
 const mm = require('../');
 const foo = require('./foo');
 
@@ -468,6 +470,28 @@ describe('mm.test.js', () => {
             done();
           });
         });
+      });
+
+      it('should mock ' + modName + '.request({url: "/bar/foo"}) pipe res work', done => {
+        const mockResData = fs.createReadStream(__filename);
+        const mockResHeaders = { server: 'mock server', statusCode: 200 };
+        mm[modName].request('', mockResData, mockResHeaders);
+
+        mod.get({
+          host: 'npmjs.org',
+          path: '/bar/foo',
+        }, onResponse);
+
+        function onResponse(res) {
+          res.statusCode.should.equal(200);
+          res.headers.should.eql({ server: 'mock server' });
+
+          const tmpfile = path.join(os.tmpdir(), uuid.v4());
+          res.pipe(fs.createWriteStream(tmpfile)).on('finish', () => {
+            fs.readFileSync(tmpfile, 'utf8').should.equal(fs.readFileSync(__filename, 'utf8'));
+            done();
+          });
+        }
       });
 
       it('should mock ' + modName + '.request({url: "/bar/foo"}) with fs readstream no response delay',
