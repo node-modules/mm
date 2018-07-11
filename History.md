@@ -1,4 +1,10 @@
 
+2.2.1 / 2018-07-11
+==================
+
+**fixes**
+  * [[`721dc6b`](http://github.com/node-modules/mm/commit/721dc6b533d6ef148f09e708d1ab2230115cce14)] - fix: support node 10 on https (#39) (fengmk2 <<fengmk2@gmail.com>>)
+
 2.2.0 / 2017-09-07
 ==================
 
