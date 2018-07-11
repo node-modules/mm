@@ -14,7 +14,7 @@ const uuid = require('uuid');
 const mm = require('../');
 const foo = require('./foo');
 
-describe('mm.test.js', () => {
+describe('test/mm.test.js', () => {
 
   let port = null;
   let sslPort = null;
