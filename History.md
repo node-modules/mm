@@ -1,4 +1,10 @@
 
+2.2.2 / 2018-07-12
+==================
+
+**fixes**
+  * [[`2cd32f9`](http://github.com/node-modules/mm/commit/2cd32f951e3881fd6cdd1768d54b015ced82860c)] - fix: mock http error response need socket (#40) (Yiyu He <<dead_horse@qq.com>>)
+
 2.2.1 / 2018-07-11
 ==================
 
