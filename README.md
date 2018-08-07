@@ -153,7 +153,7 @@ fs.readFileSync = function (...args) {
 };
 ```
 
-## .syncEmpty
+### .syncEmpty
 
 ```js
 mm.syncEmpty(fs, 'readFileSync');
@@ -213,7 +213,7 @@ https.get({
 });
 ```
 
-### .http.requestError(mockUrl, reqError, resError)
+### .http.requestError(mockUrl, reqError, resError) and .https.requestError(mockUrl, reqError, resError)
 
 ```js
 var mm = require('mm');
