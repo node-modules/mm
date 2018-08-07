@@ -1,4 +1,10 @@
 
+2.3.0 / 2018-08-07
+==================
+
+**features**
+  * [[`ea75ed5`](http://github.com/node-modules/mm/commit/ea75ed594e776e6acbbbd8a769256973ba4a9ce5)] - feat: add .d.ts (#41) (paranoidjk <<hust2012jiangkai@gmail.com>>)
+
 2.2.2 / 2018-07-12
 ==================
 
