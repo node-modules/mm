@@ -1,77 +1,73 @@
-declare function mm(target: any, key: string, prop: any): void;
 
-declare namespace mm {
+export type Request = (
+    url: string | RegExp | { url: string, host: string}, 
+    data: any, 
+    headers?: object, 
+    delay?: number,
+) => MockMate;
+
+export type RequestError = (
+    url: string | RegExp | { url: string, host: string}, 
+    reqError: string | Error, 
+    resError: string | Error, 
+    delay?: number
+) => MockMate;
+
+export interface MockMate {
+    (target: any, key: string, prop: any): void;
     /**
      * Mock async function error.
      */
-    function error(mod: any, method: string, error?: string | Error, props?: object, timeout?: number): typeof mm;
+    error: (mod: any, method: string, error?: string | Error, props?: object, timeout?: number) => MockMate;
 
     /**
      * mock return callback(null, data).
      */
-    function data(mod: any, method: string, data: any, timeout?: number): typeof mm;
+    data: (mod: any, method: string, data: any, timeout?: number) => MockMate;
 
     /**
      * mock return callback(null, null).
      */
-    function empty(mod: any, method: string, timeout?: number): typeof mm;
+    empty: (mod: any, method: string, timeout?: number) => MockMate;
 
     /**
      * mock return callback(null, data1, data2).
      */
-    function datas(mod: any, method: string, datas: any, timeout?: number): typeof mm;
+    datas: (mod: any, method: string, datas: any, timeout?: number) => MockMate;
 
     /**
      * mock function sync throw error
      */
-    function syncError(mod: any, method: string, error?: string | Error, props?: object): void;
+    syncError: (mod: any, method: string, error?: string | Error, props?: object) => void;
     
     /**
      * mock function sync return data
      */
-    function syncData(mod: any, method: string, data?: any): void;
+    syncData: (mod: any, method: string, data?: any) => void;
 
     /**
      * mock function sync return nothing
      */
-    function syncEmpty(mod: any, method: string): void;
+    syncEmpty: (mod: any, method: string) => void;
 
     /**
      * remove all mock effects.
      */
-    function restore(): typeof mm;
+    restore: () => MockMate;
 
-    const http: {
-        request: (
-            url: string | RegExp | { url: string, host: string}, 
-            data: any, 
-            headers?: object, 
-            delay?: number,
-        ) => typeof mm,
-        requestError: (
-            url: string | RegExp | { url: string, host: string}, 
-            reqError: string | Error, 
-            resError: string | Error, 
-            delay?: number
-        ) => typeof mm,
-    }
+    http: {
+        request: Request;
+        requestError: RequestError,
+    };
 
-    const https: {
-        request: (
-            url: string | RegExp | { url: string, host: string}, 
-            data: any, 
-            headers?: object, 
-            delay?: number,
-        ) => typeof mm,
-        requestError: (
-            url: string | RegExp | { url: string, host: string}, 
-            reqError: string | Error, 
-            resError: string | Error, 
-            delay?: number
-        ) => typeof mm,
-    }
+    https: {
+        request: Request;
+        requestError: RequestError,
+    };
 
 }
   
+declare const mm: MockMate;
+export = mm;
 export default mm;
 
