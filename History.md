@@ -1,4 +1,10 @@
 
+2.4.0 / 2018-08-08
+==================
+
+**others**
+  * [[`6a84a0a`](http://github.com/node-modules/mm/commit/6a84a0a9c01a8e68e08eb63b4d587b73cb8fd74a)] - refactor(tsd): use Interface Function Type so that egg-mock can extends this; (#42) (paranoidjk <<hust2012jiangkai@gmail.com>>)
+
 2.3.0 / 2018-08-07
 ==================
 
