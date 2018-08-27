@@ -1,7 +1,7 @@
 declare function mm(target: any, key: string, prop: any): void;
 
 declare namespace mm {
-  // export interface MockMate extends mm;
+  // export MockMate type for egg-mock;
   type MockMate = typeof mm;
 
   type Request = (
