@@ -1,73 +1,72 @@
+declare function mm(target: any, key: string, prop: any): void;
 
-export type Request = (
-    url: string | RegExp | { url: string, host: string}, 
-    data: any, 
-    headers?: object, 
-    delay?: number,
-) => MockMate;
+declare namespace mm {
+  // export MockMate type for egg-mock;
+  type MockMate = typeof mm;
 
-export type RequestError = (
-    url: string | RegExp | { url: string, host: string}, 
-    reqError: string | Error, 
-    resError: string | Error, 
+  type Request = (
+    url: string | RegExp | { url: string; host: string },
+    data: any,
+    headers?: object,
     delay?: number
-) => MockMate;
+  ) => MockMate;
 
-export interface MockMate {
-    (target: any, key: string, prop: any): void;
-    /**
-     * Mock async function error.
-     */
-    error: (mod: any, method: string, error?: string | Error, props?: object, timeout?: number) => MockMate;
+  type RequestError = (
+    url: string | RegExp | { url: string; host: string },
+    reqError: string | Error,
+    resError: string | Error,
+    delay?: number
+  ) => MockMate;
 
-    /**
-     * mock return callback(null, data).
-     */
-    data: (mod: any, method: string, data: any, timeout?: number) => MockMate;
+  /**
+   * Mock async function error.
+   */
+  function error(mod: any, method: string, error?: string | Error, props?: object, timeout?: number): MockMate;
 
-    /**
-     * mock return callback(null, null).
-     */
-    empty: (mod: any, method: string, timeout?: number) => MockMate;
+  /**
+   * mock return callback(null, data).
+   */
+  function data(mod: any, method: string, data: any, timeout?: number): MockMate;
 
-    /**
-     * mock return callback(null, data1, data2).
-     */
-    datas: (mod: any, method: string, datas: any, timeout?: number) => MockMate;
+  /**
+   * mock return callback(null, null).
+   */
+  function empty(mod: any, method: string, timeout?: number): MockMate;
 
-    /**
-     * mock function sync throw error
-     */
-    syncError: (mod: any, method: string, error?: string | Error, props?: object) => void;
-    
-    /**
-     * mock function sync return data
-     */
-    syncData: (mod: any, method: string, data?: any) => void;
+  /**
+   * mock return callback(null, data1, data2).
+   */
+  function datas(mod: any, method: string, datas: any, timeout?: number): MockMate;
 
-    /**
-     * mock function sync return nothing
-     */
-    syncEmpty: (mod: any, method: string) => void;
+  /**
+   * mock function sync throw error
+   */
+  function syncError(mod: any, method: string, error?: string | Error, props?: object): void;
 
-    /**
-     * remove all mock effects.
-     */
-    restore: () => MockMate;
+  /**
+   * mock function sync return data
+   */
+  function syncData(mod: any, method: string, data?: any): void;
 
-    http: {
-        request: Request;
-        requestError: RequestError,
-    };
+  /**
+   * mock function sync return nothing
+   */
+  function syncEmpty(mod: any, method: string): void;
 
-    https: {
-        request: Request;
-        requestError: RequestError,
-    };
+  /**
+   * remove all mock effects.
+   */
+  function restore(): MockMate;
 
+  const http: {
+    request: Request;
+    requestError: RequestError;
+  };
+
+  const https: {
+    request: Request;
+    requestError: RequestError;
+  };
 }
-  
-declare const mm: MockMate;
-export = mm;
-export default mm;
 
+export = mm;
