@@ -243,7 +243,7 @@ req.on('error', function (err) {
 This software is licensed under the MIT License.
 
 Copyright (C) 2012 - 2014 fengmk2 <fengmk2@gmail.com>
-Copyright (C) 2015 - 2016 node-modules
+Copyright (C) 2015 - present node-modules
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
