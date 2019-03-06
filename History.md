@@ -1,4 +1,13 @@
 
+2.5.0 / 2019-03-06
+==================
+
+**features**
+  * [[`c204c5e`](http://github.com/node-modules/mm/commit/c204c5e91eb4f2cb7263cd010293f966dc555808)] - feat: support mock error once (#45) (fengmk2 <<fengmk2@gmail.com>>)
+
+**others**
+  * [[`2cb2baf`](http://github.com/node-modules/mm/commit/2cb2bafac4344c926cbd3eb60ab2bbde3ebd4ca7)] - test: run test on macos on azure-pipelines (#44) (fengmk2 <<fengmk2@gmail.com>>)
+
 2.4.1 / 2018-08-27
 ==================
 
