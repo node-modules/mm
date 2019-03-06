@@ -24,6 +24,11 @@ declare namespace mm {
   function error(mod: any, method: string, error?: string | Error, props?: object, timeout?: number): MockMate;
 
   /**
+   * Mock async function error once.
+   */
+  function errorOnce(mod: any, method: string, error?: string | Error, props?: object, timeout?: number): MockMate;
+
+  /**
    * mock return callback(null, data).
    */
   function data(mod: any, method: string, data: any, timeout?: number): MockMate;

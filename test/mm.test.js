@@ -15,7 +15,6 @@ const mm = require('../');
 const foo = require('./foo');
 
 describe('test/mm.test.js', () => {
-
   let port = null;
   let sslPort = null;
 
@@ -136,7 +135,7 @@ describe('test/mm.test.js', () => {
 
   });
 
-  describe('error()', function() {
+  describe('error(), errorOnce()', () => {
     it('should mock fs.readFile return error', function(done) {
       mm.error(fs, 'readFile', 'can not read file');
       fs.readFile('/etc/hosts', 'utf8', function(err, data) {
@@ -153,7 +152,23 @@ describe('test/mm.test.js', () => {
           data.should.containEql('127.0.0.1');
           done();
         });
+      });
+    });
 
+    it('should mock fs.readFile return error once', done => {
+      mm.errorOnce(fs, 'readFile', 'can not read file');
+      fs.readFile('/etc/hosts', 'utf8', (err, data) => {
+        assert(err);
+        err.name.should.equal('MockError');
+        err.message.should.equal('can not read file');
+        assert(!data);
+
+        fs.readFile('/etc/hosts', 'utf8', (err, data) => {
+          assert(!err);
+          assert(data);
+          data.should.containEql('127.0.0.1');
+          done();
+        });
       });
     });
 
@@ -801,7 +816,9 @@ describe('test/mm.test.js', () => {
     it('should mm() just like muk()', function(done) {
       mm(fs, 'readFile', function(filename, callback) {
         process.nextTick(function() {
-          callback(null, new Buffer('filename: ' + filename));
+          const str = 'filename: ' + filename;
+          const buf = Buffer.from ? Buffer.from(str) : new Buffer(str);
+          callback(null, buf);
         });
       });
       fs.readFile(__filename, function(err, data) {
