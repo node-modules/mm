@@ -256,7 +256,7 @@ var req = http.get({
 });
 req.on('error', function (err) {
   console.log(err); // should return mock err: err.name === 'MockHttpResponseError'
-}
+});
 ```
 
 ## License
