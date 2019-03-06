@@ -1,65 +1,16 @@
 jobs:
 - template: azure-pipelines.template.yml
   parameters:
-    name: win_node_4
+    name: linux
+    vmImage: 'ubuntu-16.04'
+
+- template: azure-pipelines.template.yml
+  parameters:
+    name: windows
     vmImage: 'vs2017-win2016'
-    node_version: 4
-    install_script: 'npm i -g npminstall && npminstall'
-    test_script: 'npm run ci'
 
 - template: azure-pipelines.template.yml
   parameters:
-    name: win_node_6
-    vmImage: 'vs2017-win2016'
-    node_version: 6
-    install_script: 'npm i -g npminstall && npminstall'
-    test_script: 'npm run ci'
-
-- template: azure-pipelines.template.yml
-  parameters:
-    name: win_node_8
-    vmImage: 'vs2017-win2016'
-    node_version: 8
-    install_script: 'npm i -g npminstall && npminstall'
-    test_script: 'npm run ci'
-
-- template: azure-pipelines.template.yml
-  parameters:
-    name: win_node_10
-    vmImage: 'vs2017-win2016'
-    node_version: 10
-    install_script: 'npm i -g npminstall && npminstall'
-    test_script: 'npm run ci'
-
-- template: azure-pipelines.template.yml
-  parameters:
-    name: macos_node_4
+    name: macos
     vmImage: 'xcode9-macos10.13'
-    node_version: 4
-    install_script: 'npm i -g npminstall && npminstall'
-    test_script: 'npm run ci'
-
-- template: azure-pipelines.template.yml
-  parameters:
-    name: macos_node_6
-    vmImage: 'xcode9-macos10.13'
-    node_version: 6
-    install_script: 'npm i -g npminstall && npminstall'
-    test_script: 'npm run ci'
-
-- template: azure-pipelines.template.yml
-  parameters:
-    name: macos_node_8
-    vmImage: 'xcode9-macos10.13'
-    node_version: 8
-    install_script: 'npm i -g npminstall && npminstall'
-    test_script: 'npm run ci'
-
-- template: azure-pipelines.template.yml
-  parameters:
-    name: macos_node_10
-    vmImage: 'xcode9-macos10.13'
-    node_version: 10
-    install_script: 'npm i -g npminstall && npminstall'
-    test_script: 'npm run ci'
 

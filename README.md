@@ -87,6 +87,28 @@ fs.readFile('/etc/hosts', 'utf8', function (err, content) {
 });
 ```
 
+### .errorOnce(module, propertyName, errerMessage, errorProperties)
+
+Just like `mm.error()`, but only mock error once.
+
+```js
+const mm = require('mm');
+const fs = require('fs');
+
+mm.errorOne(fs, 'readFile', 'mock fs.readFile return error');
+
+fs.readFile('/etc/hosts', 'utf8', function (err, content) {
+  // err.name === 'MockError'
+  // err.message === 'mock fs.readFile return error'
+  console.log(err);
+
+  fs.readFile('/etc/hosts', 'utf8', function (err, content) {
+    console.log(err); // => null
+    console.log(content); // => your hosts
+  });
+});
+```
+
 ### .data(module, propertyName, secondCallbackArg)
 
 ```js
@@ -234,7 +256,7 @@ var req = http.get({
 });
 req.on('error', function (err) {
   console.log(err); // should return mock err: err.name === 'MockHttpResponseError'
-}
+});
 ```
 
 ## License

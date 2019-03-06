@@ -1,8 +1,8 @@
 'use strict';
 
-const mm = require('../');
+const mm = require('..');
 
-describe('test/es6.test.js', function() {
+describe('test/es6.test.js', () => {
   const foo = {
     * getMultiValues() {
       return [ 1, 2, 3 ];
@@ -14,7 +14,7 @@ describe('test/es6.test.js', function() {
 
   afterEach(mm.restore);
 
-  describe('datas(), data()', function() {
+  describe('datas(), data()', () => {
     it('should mock generator function', function* () {
       let datas;
       mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ]);
@@ -36,11 +36,11 @@ describe('test/es6.test.js', function() {
     });
   });
 
-  describe('error()', function() {
+  describe('error(), errorOnce()', () => {
     it('should mock error', function* () {
       mm.error(foo, 'getValue');
       try {
-        yield* foo.getValue();
+        yield foo.getValue();
         throw new Error('should not run this');
       } catch (err) {
         err.message.should.equal('mm mock error');
@@ -83,6 +83,30 @@ describe('test/es6.test.js', function() {
         err.status.should.equal(500);
         use.should.above(90);
       }
+    });
+
+    it('should mock error once', function* () {
+      mm.errorOnce(foo, 'getValue');
+      try {
+        yield foo.getValue();
+        throw new Error('should not run this');
+      } catch (err) {
+        err.message.should.equal('mm mock error');
+      }
+
+      const v = yield foo.getValue();
+      v.should.equal(1);
+
+      mm.errorOnce(foo, 'getValue');
+      try {
+        yield* foo.getValue();
+        throw new Error('should not run this');
+      } catch (err) {
+        err.message.should.equal('mm mock error');
+      }
+
+      const v1 = yield* foo.getValue();
+      v1.should.equal(1);
     });
   });
 });
