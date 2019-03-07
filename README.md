@@ -95,7 +95,7 @@ Just like `mm.error()`, but only mock error once.
 const mm = require('mm');
 const fs = require('fs');
 
-mm.errorOne(fs, 'readFile', 'mock fs.readFile return error');
+mm.errorOnce(fs, 'readFile', 'mock fs.readFile return error');
 
 fs.readFile('/etc/hosts', 'utf8', function (err, content) {
   // err.name === 'MockError'
