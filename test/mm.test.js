@@ -461,31 +461,31 @@ describe('test/mm.test.js', () => {
       });
 
       it.skip('should mock ' + modName + '.request({url: "/bar/foo"}) with stream 500ms response delay',
-      function(done) {
-        const mockResData = new ChunkStream([ 'mock data with regex url', '哈哈' ]);
-        const mockResHeaders = { server: 'mock server' };
-        mm[modName].request({ url: '/bar/foo' }, mockResData, mockResHeaders, 500);
+        function(done) {
+          const mockResData = new ChunkStream([ 'mock data with regex url', '哈哈' ]);
+          const mockResHeaders = { server: 'mock server' };
+          mm[modName].request({ url: '/bar/foo' }, mockResData, mockResHeaders, 500);
 
-        const start = Date.now();
-        mod.get({
-          host: 'npmjs.org',
-          path: '/bar/foo',
-        }, function(res) {
-          res.headers.should.eql(mockResHeaders);
-          res.setEncoding('utf8');
-          let body = '';
-          res.on('data', function(chunk) {
-            chunk.should.be.a.String;
-            body += chunk;
-          });
-          res.on('end', function() {
-            const use = Date.now() - start;
-            body.should.equal([ 'mock data with regex url', '哈哈' ].join(''));
-            use.should.above(490);
-            done();
+          const start = Date.now();
+          mod.get({
+            host: 'npmjs.org',
+            path: '/bar/foo',
+          }, function(res) {
+            res.headers.should.eql(mockResHeaders);
+            res.setEncoding('utf8');
+            let body = '';
+            res.on('data', function(chunk) {
+              chunk.should.be.a.String;
+              body += chunk;
+            });
+            res.on('end', function() {
+              const use = Date.now() - start;
+              body.should.equal([ 'mock data with regex url', '哈哈' ].join(''));
+              use.should.above(490);
+              done();
+            });
           });
         });
-      });
 
       it('should mock ' + modName + '.request({url: "/bar/foo"}) pipe res work', done => {
         const mockResData = fs.createReadStream(__filename);
@@ -510,37 +510,37 @@ describe('test/mm.test.js', () => {
       });
 
       it('should mock ' + modName + '.request({url: "/bar/foo"}) with fs readstream no response delay',
-      function(done) {
-        const mockResData = fs.createReadStream(__filename);
-        const mockResHeaders = { server: 'mock server', statusCode: 201 };
-        mm[modName].request('', mockResData, mockResHeaders);
-        const length = 5;
-        done = pedding(length, done);
-        for (let i = 0; i < length; i++) {
-          mod.get({
-            host: 'npmjs.org',
-            path: '/bar/foo',
-          }, onResponse);
-        }
-        function onResponse(res) {
-          res.statusCode.should.equal(201);
-          res.headers.should.eql({ server: 'mock server' });
-          res.setEncoding('utf8');
-          let body = '';
-          res.on('data', function(chunk) {
-            console.log('data emit: chunk size: %d', chunk.length);
-            chunk.should.be.a.String;
-            body += chunk;
-          });
-          res.on('end', function() {
-            console.log('end emit: body size: %d', body.length);
-            const content = fs.readFileSync(__filename, 'utf8');
-            body.length.should.equal(body.length);
-            body.should.equal(content);
-            done();
-          });
-        }
-      });
+        function(done) {
+          const mockResData = fs.createReadStream(__filename);
+          const mockResHeaders = { server: 'mock server', statusCode: 201 };
+          mm[modName].request('', mockResData, mockResHeaders);
+          const length = 5;
+          done = pedding(length, done);
+          for (let i = 0; i < length; i++) {
+            mod.get({
+              host: 'npmjs.org',
+              path: '/bar/foo',
+            }, onResponse);
+          }
+          function onResponse(res) {
+            res.statusCode.should.equal(201);
+            res.headers.should.eql({ server: 'mock server' });
+            res.setEncoding('utf8');
+            let body = '';
+            res.on('data', function(chunk) {
+              console.log('data emit: chunk size: %d', chunk.length);
+              chunk.should.be.a.String;
+              body += chunk;
+            });
+            res.on('end', function() {
+              console.log('end emit: body size: %d', body.length);
+              const content = fs.readFileSync(__filename, 'utf8');
+              body.length.should.equal(body.length);
+              body.should.equal(content);
+              done();
+            });
+          }
+        });
 
       it('should mock ' + modName + '.request({host: "cnodejs.org"}) 500ms response delay', function(done) {
         const mockResData = [ 'mock data with regex url', '哈哈' ];
@@ -959,4 +959,7 @@ const enable = require('enable');
 if (enable.generator) {
   require('./es6');
   require('./thunk');
+}
+if (enable.asyncArrowFunction) {
+  require('./async-await');
 }
