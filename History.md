@@ -1,4 +1,14 @@
 
+3.0.0 / 2020-03-01
+==================
+
+**features**
+  * [[`f49c32e`](http://github.com/node-modules/mm/commit/f49c32e84fdef24655fdc25289d7aeb2e9560c0c)] - feat: spy function by default (#47) (Yiyu He <<dead_horse@qq.com>>)
+  * [[`d8d9aa3`](http://github.com/node-modules/mm/commit/d8d9aa3562249e767eb7f0cb13bb325a9dbac91b)] - feat: [BREAKING] don't allow to mock async function to normal function (#46) (fengmk2 <<fengmk2@gmail.com>>)
+
+**others**
+  * [[`eec0876`](http://github.com/node-modules/mm/commit/eec08767b681bc7e3d6d69cdfa7049b22d716239)] - chore: fix errorOnce (fengmk2 <<fengmk2@gmail.com>>)
+
 2.5.0 / 2019-03-06
 ==================
 
