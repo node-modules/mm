@@ -1,4 +1,10 @@
 
+3.0.2 / 2020-03-01
+==================
+
+**fixes**
+  * [[`0e310b4`](http://github.com/node-modules/mm/commit/0e310b4d6f3d5511f4e86971413014fe5f496ce7)] - fix: do function type check after execute (#49) (Yiyu He <<dead_horse@qq.com>>)
+
 3.0.1 / 2020-03-01
 ==================
 
