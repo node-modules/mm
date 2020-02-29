@@ -1015,7 +1015,7 @@ describe('test/mm.test.js', () => {
           this.foo();
           return a + b;
         },
-        foo() { },
+        foo() { /* */ },
       };
 
       mm(target, 'add', function() {
@@ -1035,7 +1035,7 @@ describe('test/mm.test.js', () => {
           await this.foo();
           return a + b;
         },
-        async foo() { },
+        async foo() { /* */ },
       };
 
       mm(target, 'add', async function() {
@@ -1055,7 +1055,7 @@ describe('test/mm.test.js', () => {
           yield this.foo();
           return a + b;
         },
-        * foo() { },
+        * foo() { /* */ },
       };
 
       mm(target, 'add', function* () {
