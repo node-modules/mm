@@ -1,4 +1,10 @@
 
+3.0.1 / 2020-03-01
+==================
+
+**fixes**
+  * [[`6ca26e4`](http://github.com/node-modules/mm/commit/6ca26e4a600e365885f5056be3cd084408e5d7ea)] - fix: fix this binding (#48) (Yiyu He <<dead_horse@qq.com>>)
+
 3.0.0 / 2020-03-01
 ==================
 
