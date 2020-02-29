@@ -1012,11 +1012,16 @@ describe('test/mm.test.js', () => {
     it('should spy function', () => {
       const target = {
         add(a, b) {
+          this.foo();
           return a + b;
         },
+        foo() { },
       };
 
-      mm(target, 'add', () => 3);
+      mm(target, 'add', function() {
+        this.foo();
+        return 3;
+      });
       target.add(1, 1).should.equal(3);
       target.add(2, 2).should.equal(3);
       target.add.called.should.equal(2);
@@ -1027,11 +1032,16 @@ describe('test/mm.test.js', () => {
     it('should spy async function', async () => {
       const target = {
         async add(a, b) {
+          await this.foo();
           return a + b;
         },
+        async foo() { },
       };
 
-      mm(target, 'add', async () => 3);
+      mm(target, 'add', async function() {
+        await this.foo();
+        return 3;
+      });
       (await target.add(1, 1)).should.equal(3);
       (await target.add(2, 2)).should.equal(3);
       target.add.called.should.equal(2);
@@ -1042,11 +1052,16 @@ describe('test/mm.test.js', () => {
     it('should spy generator function', function* () {
       const target = {
         * add(a, b) {
+          yield this.foo();
           return a + b;
         },
+        * foo() { },
       };
 
-      mm(target, 'add', function* () { return 3; });
+      mm(target, 'add', function* () {
+        yield this.foo();
+        return 3;
+      });
       (yield target.add(1, 1)).should.equal(3);
       (yield target.add(2, 2)).should.equal(3);
       target.add.called.should.equal(2);
