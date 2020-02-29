@@ -47,6 +47,31 @@ console.log(fs.readFileSync('《九评 Java》'));
 // => throw `Error: ENOENT, no such file or directory '《九评 Java》`
 ```
 
+### Support spy
+
+If mocked property is a function, it will be spied, every time it called, mm will modify `.called`, `.calledArguments` and `.lastCalledArguments`. For example:
+
+```js
+const target = {
+  async add(a, b) {
+    return a + b;
+  },
+};
+
+mm.data(target, 'add', 3);
+
+(await target.add(1, 1)).should.equal(3);
+target.add.called.should.equal(1);
+target.add.calledArguments.should.eql([[ 1, 1 ]]);
+target.add.lastCalledArguments.should.eql([ 1, 1 ]);
+
+(await target.add(2, 2)).should.equal(3);
+target.add.called.should.equal(2);
+target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+});
+```
+
 ### Support generator function
 
 ```js

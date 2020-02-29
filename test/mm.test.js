@@ -953,6 +953,107 @@ describe('test/mm.test.js', () => {
       });
     });
   });
+
+  describe('spy', () => {
+    it('should ignore not function', () => {
+      const target = {
+        foo: 'bar',
+      };
+
+      mm(target, 'foo', 'bar1');
+      target.foo.should.equal('bar1');
+    });
+
+    it('should spy function with data', () => {
+      const target = {
+        add(a, b) {
+          return a + b;
+        },
+      };
+
+      mm.syncData(target, 'add', 3);
+      target.add(1, 1).should.equal(3);
+      target.add(2, 2).should.equal(3);
+      target.add.called.should.equal(2);
+      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+    });
+
+    it('should spy async function with data', async () => {
+      const target = {
+        async add(a, b) {
+          return a + b;
+        },
+      };
+
+      mm.data(target, 'add', 3);
+      (await target.add(1, 1)).should.equal(3);
+      (await target.add(2, 2)).should.equal(3);
+      target.add.called.should.equal(2);
+      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+    });
+
+    it('should spy generator function with data', function* () {
+      const target = {
+        * add(a, b) {
+          return a + b;
+        },
+      };
+
+      mm.data(target, 'add', 3);
+      (yield target.add(1, 1)).should.equal(3);
+      (yield target.add(2, 2)).should.equal(3);
+      target.add.called.should.equal(2);
+      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+    });
+
+    it('should spy function', () => {
+      const target = {
+        add(a, b) {
+          return a + b;
+        },
+      };
+
+      mm(target, 'add', () => 3);
+      target.add(1, 1).should.equal(3);
+      target.add(2, 2).should.equal(3);
+      target.add.called.should.equal(2);
+      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+    });
+
+    it('should spy async function', async () => {
+      const target = {
+        async add(a, b) {
+          return a + b;
+        },
+      };
+
+      mm(target, 'add', async () => 3);
+      (await target.add(1, 1)).should.equal(3);
+      (await target.add(2, 2)).should.equal(3);
+      target.add.called.should.equal(2);
+      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+    });
+
+    it('should spy generator function', function* () {
+      const target = {
+        * add(a, b) {
+          return a + b;
+        },
+      };
+
+      mm(target, 'add', function* () { return 3; });
+      (yield target.add(1, 1)).should.equal(3);
+      (yield target.add(2, 2)).should.equal(3);
+      target.add.called.should.equal(2);
+      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+    });
+  });
 });
 
 const enable = require('enable');
