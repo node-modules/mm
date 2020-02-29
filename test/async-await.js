@@ -30,9 +30,10 @@ describe('test/async-await.test.js', () => {
         mm(foo, 'request', () => {
           return 'no';
         });
+        foo.request();
         throw new Error('should not run this');
       } catch (err) {
-        err.message.should.equal('Can\'t mock async function to normal function');
+        err.message.should.equal('Can\'t mock async function to normal function for property "request"');
       }
     });
   });
