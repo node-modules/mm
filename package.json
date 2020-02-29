@@ -15,26 +15,26 @@
     "autod": "autod -w --prefix '^'"
   },
   "dependencies": {
-    "is-type-of": "^1.0.0",
-    "ko-sleep": "^1.0.2",
-    "muk-prop": "^1.0.0",
-    "thenify": "^3.2.1"
+    "is-type-of": "^1.2.1",
+    "ko-sleep": "^1.0.3",
+    "muk-prop": "^1.2.1",
+    "thenify": "^3.3.0"
   },
   "devDependencies": {
-    "autod": "^2.8.0",
+    "autod": "^3.1.0",
     "chunkstream": "^0.0.1",
     "co": "^4.6.0",
-    "egg-bin": "^1.10.3",
-    "egg-ci": "^1.9.1",
-    "enable": "^3.3.0",
-    "eslint": "^3.18.0",
-    "eslint-config-egg": "^3.2.0",
+    "egg-bin": "^1.11.1",
+    "egg-ci": "^1.13.1",
+    "enable": "^3.4.0",
+    "eslint": "^6.8.0",
+    "eslint-config-egg": "^8.0.1",
     "node-patch": "*",
     "pedding": "^1.1.0",
-    "should": "^11.2.1",
+    "should": "^13.2.3",
     "thunkify-wrap": "^1.0.4",
-    "urllib": "^2.21.2",
-    "uuid": "^3.1.0"
+    "urllib": "^2.34.2",
+    "uuid": "^3.4.0"
   },
   "homepage": "http://github.com/node-modules/mm",
   "repository": {
@@ -48,12 +48,12 @@
     "test"
   ],
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=8.0.0"
   },
   "ci": {
     "type": "travis, azure-pipelines",
-    "version": "4, 6, 8, 10, 11"
+    "version": "8, 10, 12, 13"
   },
-  "author": "fengmk2 <fengmk2@gmail.com> (http://fengmk2.com)",
+  "author": "fengmk2 <fengmk2@gmail.com> (https://fengmk2.com)",
   "license": "MIT"
 }
