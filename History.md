@@ -1,4 +1,10 @@
 
+3.0.3 / 2020-03-12
+==================
+
+**fixes**
+  * [[`8fea4ad`](http://github.com/node-modules/mm/commit/8fea4ada1c5a49fbe8ade4fb0102024a850f2f57)] - fix: support mock jest.fn() (Yiyu He <<dead_horse@qq.com>>)
+
 3.0.2 / 2020-03-01
 ==================
 
