@@ -1068,6 +1068,24 @@ describe('test/mm.test.js', () => {
       target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
       target.add.lastCalledArguments.should.eql([ 2, 2 ]);
     });
+
+    it('should ignore jest.fn()', () => {
+      const target = {
+        add(a, b) {
+          return a + b;
+        },
+      };
+
+      function mockAdd() {
+        return 3;
+      }
+      mockAdd._isMockFunction = true;
+      mockAdd.mock = {};
+      mm(target, 'add', mockAdd);
+      target.add(1, 1).should.equal(3);
+      target.add(2, 2).should.equal(3);
+      assert(target.add === mockAdd);
+    });
   });
 });
 
