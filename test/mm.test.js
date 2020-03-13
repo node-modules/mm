@@ -1086,7 +1086,25 @@ describe('test/mm.test.js', () => {
       target.add(2, 2).should.equal(3);
       assert(target.add === mockAdd);
     });
+
+    it('should mm.spy() work', async () => {
+      const target = {
+        async add(a, b) {
+          await this.foo();
+          return a + b;
+        },
+        async foo() { /* */ },
+      };
+
+      mm.spy(target, 'add');
+      (await target.add(1, 1)).should.equal(2);
+      (await target.add(2, 2)).should.equal(4);
+      target.add.called.should.equal(2);
+      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+    });
   });
+
 });
 
 const enable = require('enable');

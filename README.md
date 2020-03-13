@@ -60,16 +60,38 @@ const target = {
 
 mm.data(target, 'add', 3);
 
-(await target.add(1, 1)).should.equal(3);
-target.add.called.should.equal(1);
-target.add.calledArguments.should.eql([[ 1, 1 ]]);
-target.add.lastCalledArguments.should.eql([ 1, 1 ]);
+assert.equal(await target.add(1, 1), 3);
+assert.equal(target.add.called, 1);
+assert.deepEqual(target.add.calledArguments, [[ 1, 1 ]]);
+assert.deepEqual(target.add.lastCalledArguments, [ 1, 1 ]);
 
-(await target.add(2, 2)).should.equal(3);
-target.add.called.should.equal(2);
-target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
-target.add.lastCalledArguments.should.eql([ 2, 2 ]);
-});
+assert.equal(await target.add(2, 2), 3);
+assert.equal(target.add.called, 2);
+assert.deepEqual(target.add.calledArguments, [[ 1, 1 ], [ 2, 2 ]]);
+assert.deepEqual(target.add.lastCalledArguments, [ 2, 2 ]);
+```
+
+If you only need spy and don't need mock, you can use `mm.spy` method directly:
+
+```js
+const target = {
+  async add(a, b) {
+    await this.foo();
+    return a + b;
+  },
+  async foo() { /* */ },
+};
+
+mm.spy(target, 'add');
+assert.equal(await target.add(1, 1), 2);
+assert.equal(target.add.called, 1);
+assert.deepEqual(target.add.calledArguments, [[ 1, 1 ]]);
+assert.deepEqual(target.add.lastCalledArguments, [ 1, 1 ]);
+
+assert.equal(await target.add(2, 2), 4);
+assert.equal(target.add.called, 2);
+assert.deepEqual(target.add.calledArguments, [[ 1, 1 ], [ 2, 2 ]]);
+assert.deepEqual(target.add.lastCalledArguments, [ 2, 2 ]);
 ```
 
 ### Support generator function
