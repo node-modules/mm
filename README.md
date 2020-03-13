@@ -72,6 +72,25 @@ target.add.lastCalledArguments.should.eql([ 2, 2 ]);
 });
 ```
 
+If you only need spy and don't need mock, you can use `mm.spy` method directly:
+
+```js
+const target = {
+  async add(a, b) {
+    await this.foo();
+    return a + b;
+  },
+  async foo() { /* */ },
+};
+
+mm.spy(target, 'add');
+(await target.add(1, 1)).should.equal(2);
+(await target.add(2, 2)).should.equal(4);
+target.add.called.should.equal(2);
+target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+```
+
 ### Support generator function
 
 ```js
