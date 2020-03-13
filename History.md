@@ -1,4 +1,10 @@
 
+3.1.0 / 2020-03-13
+==================
+
+**features**
+  * [[`5ed8a73`](http://github.com/node-modules/mm/commit/5ed8a7305ddd8e3bf0892897f7fd160f3bf0b09b)] - feat: mm.spy method (#51) (Yiyu He <<dead_horse@qq.com>>)
+
 3.0.3 / 2020-03-12
 ==================
 
