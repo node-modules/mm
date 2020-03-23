@@ -306,6 +306,25 @@ req.on('error', function (err) {
 });
 ```
 
+### .classMethod(instance, method, mockMethod)
+
+```js
+class Foo {
+  async fetch() {
+    return 1;
+  }
+}
+
+const foo = new Foo();
+const foo1 = new Foo();
+
+mm.classMethod(foo, 'fetch', async () => {
+  return 3;
+});
+assert(await foo.fetch() === 3);
+assert(await foo1.fetch() === 3);
+```
+
 ## License
 
 ```
