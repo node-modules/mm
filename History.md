@@ -1,4 +1,10 @@
 
+3.2.0 / 2020-03-24
+==================
+
+**features**
+  * [[`d2e4c28`](http://github.com/node-modules/mm/commit/d2e4c28014c13449fa469bbe656ccea683eeca84)] - feat: support mock class method from instance (#52) (fengmk2 <<fengmk2@gmail.com>>)
+
 3.1.0 / 2020-03-13
 ==================
 
