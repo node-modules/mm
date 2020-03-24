@@ -1,5 +1,6 @@
 'use strict';
 
+const assert = require('assert');
 const mm = require('..');
 
 describe('test/es6.test.js', () => {
@@ -33,6 +34,45 @@ describe('test/es6.test.js', () => {
       mm.restore();
       data = yield* foo.getValue();
       data.should.equal(1);
+    });
+  });
+
+  describe('classMethod()', () => {
+    it('should class method from instance', async () => {
+      class Foo {
+        async fetch() {
+          return 1;
+        }
+      }
+
+      const foo = new Foo();
+      const foo1 = new Foo();
+      assert(await foo.fetch() === 1);
+      assert(await foo1.fetch() === 1);
+
+      mm(foo, 'fetch', async () => {
+        return 2;
+      });
+      assert(await foo.fetch() === 2);
+      assert(await foo1.fetch() === 1);
+
+      mm.restore();
+      mm.classMethod(foo, 'fetch', async () => {
+        return 3;
+      });
+      assert(await foo.fetch() === 3);
+      assert(await foo1.fetch() === 3);
+
+      mm.restore();
+      mm.classMethod(foo, 'fetch', async () => {
+        return 4;
+      });
+      const foo2 = new Foo();
+      assert(await foo.fetch() === 4);
+      assert(await foo1.fetch() === 4);
+      assert(await foo2.fetch() === 4);
+      const foo3 = new Foo();
+      assert(await foo3.fetch() === 4);
     });
   });
 
