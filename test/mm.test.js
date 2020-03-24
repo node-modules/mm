@@ -138,7 +138,7 @@ describe('test/mm.test.js', () => {
   describe('error(), errorOnce()', () => {
     it('should mock fs.readFile return error', function(done) {
       mm.error(fs, 'readFile', 'can not read file');
-      fs.readFile('/etc/hosts', 'utf8', function(err, data) {
+      fs.readFile(__filename, 'utf8', function(err, data) {
         assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('can not read file');
@@ -146,7 +146,7 @@ describe('test/mm.test.js', () => {
 
         mm.restore();
 
-        fs.readFile('/etc/hosts', 'utf8', function(err, data) {
+        fs.readFile(__filename, 'utf8', function(err, data) {
           assert(!err);
           assert(data);
           data.should.containEql('127.0.0.1');
@@ -157,13 +157,13 @@ describe('test/mm.test.js', () => {
 
     it('should mock fs.readFile return error once', done => {
       mm.errorOnce(fs, 'readFile', 'can not read file');
-      fs.readFile('/etc/hosts', 'utf8', (err, data) => {
+      fs.readFile(__filename, 'utf8', (err, data) => {
         assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('can not read file');
         assert(!data);
 
-        fs.readFile('/etc/hosts', 'utf8', (err, data) => {
+        fs.readFile(__filename, 'utf8', (err, data) => {
           assert(!err);
           assert(data);
           data.should.containEql('127.0.0.1');
@@ -176,7 +176,7 @@ describe('test/mm.test.js', () => {
       const err = new Error('mock error instance');
       err.name = 'CustomError';
       mm.error(fs, 'readFile', err);
-      fs.readFile('/etc/hosts', 'utf8', function(err, data) {
+      fs.readFile(__filename, 'utf8', function(err, data) {
         assert(err);
         err.name.should.equal('CustomError');
         err.message.should.equal('mock error instance');
@@ -187,7 +187,7 @@ describe('test/mm.test.js', () => {
 
     it('should mock error with empty error', function(done) {
       mm.error(fs, 'readFile');
-      fs.readFile('/etc/hosts', 'utf8', function(err, data) {
+      fs.readFile(__filename, 'utf8', function(err, data) {
         assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('mm mock error');
@@ -198,7 +198,7 @@ describe('test/mm.test.js', () => {
 
     it('should mock error with properties', function(done) {
       mm.error(fs, 'readFile', 'mm mock error', { code: 'ENOENT', name: 'MockError' });
-      fs.readFile('/etc/hosts', 'utf8', function(err, data) {
+      fs.readFile(__filename, 'utf8', function(err, data) {
         assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('mm mock error');
@@ -211,7 +211,7 @@ describe('test/mm.test.js', () => {
     it('should mock error with 500ms timeout', function(done) {
       mm.error(fs, 'readFile', '500ms timeout', 500);
       const start = Date.now();
-      fs.readFile('/etc/hosts', 'utf8', function(err, data) {
+      fs.readFile(__filename, 'utf8', function(err, data) {
         const use = Date.now() - start;
         assert(err);
         err.name.should.equal('MockError');
@@ -225,7 +225,7 @@ describe('test/mm.test.js', () => {
     it('should mock error with 500ms timeout and properties', function(done) {
       mm.error(fs, 'readFile', '500ms timeout', { code: 'ENOENT' }, 500);
       const start = Date.now();
-      fs.readFile('/etc/hosts', 'utf8', function(err, data) {
+      fs.readFile(__filename, 'utf8', function(err, data) {
         const use = Date.now() - start;
         assert(err);
         err.name.should.equal('MockError');
