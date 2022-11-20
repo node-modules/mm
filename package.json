@@ -25,7 +25,7 @@
     "chunkstream": "^0.0.1",
     "co": "^4.6.0",
     "egg-bin": "^1.11.1",
-    "egg-ci": "^1.13.1",
+    "egg-ci": "^2.2.0",
     "enable": "^3.4.0",
     "eslint": "^6.8.0",
     "eslint-config-egg": "^8.0.1",
@@ -52,7 +52,7 @@
   },
   "ci": {
     "type": "travis, azure-pipelines",
-    "version": "8, 10, 12, 13"
+    "version": "8, 10, 12, 14, 16, 18"
   },
   "author": "fengmk2 <fengmk2@gmail.com> (https://fengmk2.com)",
   "license": "MIT"

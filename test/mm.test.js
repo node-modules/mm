@@ -860,6 +860,28 @@ describe('test/mm.test.js', () => {
         });
       });
     });
+
+    it('shoud mock function with property', () => {
+      const NativeDate = Date;
+      const mockNow = function(date) {
+        const NewDate = function(...args) {
+          if (args.length === 0) {
+            return new NativeDate(date);
+          }
+          return new NativeDate(...args);
+        };
+        NewDate.now = function() {
+          return new NativeDate(date).getTime();
+        };
+        NewDate.UTC = NativeDate.UTC;
+        NewDate.parse = NativeDate.parse;
+        NewDate.prototype = NativeDate.prototype;
+        return NewDate;
+      };
+      mm(global, 'Date', mockNow('2022-11-20T05:22:04.569Z'));
+      assert(Date.now() === 1668921724569);
+      assert(new Date().getTime() === 1668921724569);
+    });
   });
 
   describe('mm(process.env, "HOME")', function() {
