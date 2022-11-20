@@ -48,11 +48,10 @@
     "test"
   ],
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=14.0.0"
   },
   "ci": {
-    "type": "travis, azure-pipelines",
-    "version": "8, 10, 12, 14, 16, 18"
+    "version": "14, 16, 18"
   },
   "author": "fengmk2 <fengmk2@gmail.com> (https://fengmk2.com)",
   "license": "MIT"
