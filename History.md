@@ -1,4 +1,10 @@
 
+3.2.1 / 2022-11-20
+==================
+
+**fixes**
+  * [[`8c4c458`](http://github.com/node-modules/mm/commit/8c4c458de9c95867b61daf3352ae23867a22a334)] - fix: support mock function which has properties (#53) (killa <<killa123@126.com>>)
+
 3.2.0 / 2020-03-24
 ==================
 
