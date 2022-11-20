@@ -2,25 +2,18 @@ mm
 =======
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![Node.js CI](https://github.com/node-modules/mm/actions/workflows/nodejs.yml/badge.svg)](https://github.com/node-modules/mm/actions/workflows/nodejs.yml)
 [![Test coverage][codecov-image]][codecov-url]
-[![David deps][david-image]][david-url]
 [![npm download][download-image]][download-url]
 
 [npm-image]: https://img.shields.io/npm/v/mm.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/mm
-[travis-image]: https://img.shields.io/travis/node-modules/mm.svg?style=flat-square
-[travis-url]: https://travis-ci.org/node-modules/mm
 [codecov-image]: https://codecov.io/github/node-modules/mm/coverage.svg?branch=master
 [codecov-url]: https://codecov.io/github/node-modules/mm?branch=master
-[david-image]: https://img.shields.io/david/node-modules/mm.svg?style=flat-square
-[david-url]: https://david-dm.org/node-modules/mm
 [download-image]: https://img.shields.io/npm/dm/mm.svg?style=flat-square
 [download-url]: https://npmjs.org/package/mm
 
 An simple but flexible **mock(or say stub)** package, mock mate.
-
-__mm@2 only support node v4.0+.__
 
 ## Install
 
@@ -92,22 +85,6 @@ assert.equal(await target.add(2, 2), 4);
 assert.equal(target.add.called, 2);
 assert.deepEqual(target.add.calledArguments, [[ 1, 1 ], [ 2, 2 ]]);
 assert.deepEqual(target.add.lastCalledArguments, [ 2, 2 ]);
-```
-
-### Support generator function
-
-```js
-var foo = {
-  get: function* () {
-    return 1;
-  }
-};
-
-mm.data(foo, 'get', 2);
-var data = yield* foo.get(); // data should return 2
-
-mm.error(foo, 'get', 'error boom');
-yield* foo.get(); // should throw error
 ```
 
 ## API
@@ -327,27 +304,4 @@ assert(await foo1.fetch() === 3);
 
 ## License
 
-```
-This software is licensed under the MIT License.
-
-Copyright (C) 2012 - 2014 fengmk2 <fengmk2@gmail.com>
-Copyright (C) 2015 - present node-modules
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-```
+[MIT](LICENSE)
