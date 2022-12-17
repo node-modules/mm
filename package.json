@@ -23,7 +23,6 @@
     "chunkstream": "^0.0.1",
     "co": "^4.6.0",
     "egg-bin": "^5.5.0",
-    "egg-ci": "^2.2.0",
     "enable": "^3.4.0",
     "eslint": "^8.28.0",
     "eslint-config-egg": "^12.1.0",
