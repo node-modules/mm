@@ -1125,8 +1125,24 @@ describe('test/mm.test.js', () => {
       target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
       target.add.lastCalledArguments.should.eql([ 2, 2 ]);
     });
-  });
 
+    it('should reset spy statistics after restore', () => {
+      const target = {
+        add(a, b) {
+          return a + b;
+        },
+      };
+      mm.spy(target, 'add');
+      target.add(1, 1);
+      target.add.called.should.equal(1);
+      target.add.calledArguments.should.eql([[ 1, 1 ]]);
+      target.add.lastCalledArguments.should.eql([ 1, 1 ]);
+      mm.restore();
+      assert.strictEqual(target.add.called, undefined);
+      assert.strictEqual(target.add.calledArguments, undefined);
+      assert.strictEqual(target.add.lastCalledArguments, undefined);
+    });
+  });
 });
 
 const enable = require('enable');
