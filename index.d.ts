@@ -39,6 +39,11 @@ declare namespace mm {
   function empty(mod: any, method: string, timeout?: number): MockMate;
 
   /**
+   * spy a function
+   */
+  function spy(mod: any, method: string): void;
+
+  /**
    * mock return callback(null, data1, data2).
    */
   function datas(mod: any, method: string, datas: any, timeout?: number): MockMate;
