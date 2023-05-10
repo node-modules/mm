@@ -16,7 +16,7 @@
   "dependencies": {
     "is-type-of": "^1.2.1",
     "ko-sleep": "^1.0.3",
-    "muk-prop": "^1.2.1",
+    "@cnpmjs/muk-prop": "^1.0.0",
     "thenify": "^3.3.0"
   },
   "devDependencies": {
