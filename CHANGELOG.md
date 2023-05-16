@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.4](https://github.com/node-modules/mm/compare/v3.2.3...v3.2.4) (2023-05-16)
+
+
+### Bug Fixes
+
+* revert upgrade muk-prop@3.x ([#57](https://github.com/node-modules/mm/issues/57)) ([60d5668](https://github.com/node-modules/mm/commit/60d5668f7a8354eb05156ad54bbfdd78a6085eef))
+
 ## [3.2.3](https://github.com/node-modules/mm/compare/v3.2.2...v3.2.3) (2023-05-12)
 
 
