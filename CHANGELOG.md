@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/node-modules/mm/compare/v3.2.4...v3.3.0) (2023-05-16)
+
+
+### Features
+
+* upgrade deps ([#58](https://github.com/node-modules/mm/issues/58)) ([d16b55c](https://github.com/node-modules/mm/commit/d16b55cfc97f212109712307f7a4f3e986370aab))
+
 ## [3.2.4](https://github.com/node-modules/mm/compare/v3.2.3...v3.2.4) (2023-05-16)
 
 
@@ -327,4 +334,3 @@
   * add mock http.request() and http.requestError()
   * add mm.error() impl
   * Release 0.0.1
-
