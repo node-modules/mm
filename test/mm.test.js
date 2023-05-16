@@ -8,9 +8,9 @@ const assert = require('assert');
 const http = require('http');
 const https = require('https');
 const child_process = require('child_process');
+const { randomUUID } = require('crypto');
 const pedding = require('pedding');
 const ChunkStream = require('chunkstream');
-const uuid = require('uuid');
 const mm = require('../');
 const foo = require('./foo');
 
@@ -501,7 +501,7 @@ describe('test/mm.test.js', () => {
           res.statusCode.should.equal(200);
           res.headers.should.eql({ server: 'mock server' });
 
-          const tmpfile = path.join(os.tmpdir(), uuid.v4());
+          const tmpfile = path.join(os.tmpdir(), randomUUID());
           res.pipe(fs.createWriteStream(tmpfile)).on('finish', () => {
             fs.readFileSync(tmpfile, 'utf8').should.equal(fs.readFileSync(__filename, 'utf8'));
             done();
@@ -1145,11 +1145,6 @@ describe('test/mm.test.js', () => {
   });
 });
 
-const enable = require('enable');
-if (enable.generator) {
-  require('./es6');
-  require('./thunk');
-}
-if (enable.asyncArrowFunction) {
-  require('./async-await');
-}
+require('./es6');
+require('./thunk');
+require('./async-await');
