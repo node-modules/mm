@@ -15,23 +15,19 @@
   },
   "dependencies": {
     "is-type-of": "^1.2.1",
-    "ko-sleep": "^1.0.3",
     "muk-prop": "^1.2.1",
     "thenify": "^3.3.0"
   },
   "devDependencies": {
     "chunkstream": "^0.0.1",
     "co": "^4.6.0",
-    "egg-bin": "^5.5.0",
-    "enable": "^3.4.0",
+    "egg-bin": "^6.4.0",
     "eslint": "^8.28.0",
     "eslint-config-egg": "^12.1.0",
-    "node-patch": "*",
     "pedding": "^1.1.0",
     "should": "^13.2.3",
     "thunkify-wrap": "^1.0.4",
-    "urllib": "^3.5.1",
-    "uuid": "^3.4.0"
+    "urllib": "^3.5.1"
   },
   "homepage": "http://github.com/node-modules/mm",
   "repository": {
@@ -46,9 +42,6 @@
   ],
   "engines": {
     "node": ">=14.0.0"
-  },
-  "ci": {
-    "version": "14, 16, 18"
   },
   "author": "fengmk2 <fengmk2@gmail.com> (https://github.com/fengmk2)",
   "license": "MIT"
