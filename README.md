@@ -1,5 +1,4 @@
-mm
-=======
+# mm, mock mate
 
 [![NPM version][npm-image]][npm-url]
 [![Node.js CI](https://github.com/node-modules/mm/actions/workflows/nodejs.yml/badge.svg)](https://github.com/node-modules/mm/actions/workflows/nodejs.yml)
@@ -18,7 +17,7 @@ An simple but flexible **mock(or say stub)** package, mock mate.
 ## Install
 
 ```bash
-$ npm install mm --save-dev
+npm install mm --save-dev
 ```
 
 ## Usage
@@ -143,6 +142,38 @@ mm.data(fs, 'readFile', new Buffer('some content'));
 fs.readFile = function (...args, callback) {
   callback(null, new Buffer('some content'))
 };
+```
+
+### .dataWithAsyncDispose(module, propertyName, promiseResolveArg)
+
+Support [Symbol.asyncDispose](https://www.totaltypescript.com/typescript-5-2-new-keyword-using)
+
+```js
+mm.dataWithAsyncDispose(locker, 'tryLock', {
+  locked: true,
+});
+
+// equals
+
+locker.tryLock = async () => {
+  return {
+    locked: true,
+    [Symbol.asyncDispose](): async () => {
+      // do nothing
+    },
+  };
+}
+```
+
+Run test with `await using` should work:
+
+```js
+mm.dataWithAsyncDispose(locker, 'tryLock', {
+  locked: true,
+});
+
+await using lock = await locker.tryLock('foo-key');
+assert.equal(lock.locked, true);
 ```
 
 ### .empty(module, propertyName)
@@ -305,3 +336,16 @@ assert(await foo1.fetch() === 3);
 ## License
 
 [MIT](LICENSE)
+
+<!-- GITCONTRIBUTOR_START -->
+
+## Contributors
+
+|[<img src="https://avatars.githubusercontent.com/u/156269?v=4" width="100px;"/><br/><sub><b>fengmk2</b></sub>](https://github.com/fengmk2)<br/>|[<img src="https://avatars.githubusercontent.com/u/985607?v=4" width="100px;"/><br/><sub><b>dead-horse</b></sub>](https://github.com/dead-horse)<br/>|[<img src="https://avatars.githubusercontent.com/u/1147375?v=4" width="100px;"/><br/><sub><b>alsotang</b></sub>](https://github.com/alsotang)<br/>|[<img src="https://avatars.githubusercontent.com/u/360661?v=4" width="100px;"/><br/><sub><b>popomore</b></sub>](https://github.com/popomore)<br/>|[<img src="https://avatars.githubusercontent.com/u/32174276?v=4" width="100px;"/><br/><sub><b>semantic-release-bot</b></sub>](https://github.com/semantic-release-bot)<br/>|[<img src="https://avatars.githubusercontent.com/u/4635838?v=4" width="100px;"/><br/><sub><b>gemwuu</b></sub>](https://github.com/gemwuu)<br/>|
+| :---: | :---: | :---: | :---: | :---: | :---: |
+|[<img src="https://avatars.githubusercontent.com/u/7971415?v=4" width="100px;"/><br/><sub><b>paranoidjk</b></sub>](https://github.com/paranoidjk)<br/>|[<img src="https://avatars.githubusercontent.com/u/2972143?v=4" width="100px;"/><br/><sub><b>nightink</b></sub>](https://github.com/nightink)<br/>|[<img src="https://avatars.githubusercontent.com/u/6897780?v=4" width="100px;"/><br/><sub><b>killagu</b></sub>](https://github.com/killagu)<br/>|[<img src="https://avatars.githubusercontent.com/u/9213756?v=4" width="100px;"/><br/><sub><b>gxkl</b></sub>](https://github.com/gxkl)<br/>|[<img src="https://avatars.githubusercontent.com/u/2170848?v=4" width="100px;"/><br/><sub><b>iyuq</b></sub>](https://github.com/iyuq)<br/>|[<img src="https://avatars.githubusercontent.com/u/227713?v=4" width="100px;"/><br/><sub><b>atian25</b></sub>](https://github.com/atian25)<br/>|
+[<img src="https://avatars.githubusercontent.com/u/2748884?v=4" width="100px;"/><br/><sub><b>xavierchow</b></sub>](https://github.com/xavierchow)<br/>|[<img src="https://avatars.githubusercontent.com/u/5856440?v=4" width="100px;"/><br/><sub><b>whxaxes</b></sub>](https://github.com/whxaxes)<br/>
+
+This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto updated at `Sat Dec 09 2023 11:34:46 GMT+0800`.
+
+<!-- GITCONTRIBUTOR_END -->
