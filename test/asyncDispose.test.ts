@@ -24,6 +24,9 @@ describe('test/asyncDispose.test.ts', () => {
 
   describe('dataWithAsyncDispose()', () => {
     it('should mock async function with asyncDispose', async () => {
+      await using data0 = await foo.echo();
+      assert.equal(data0.hi, 'yes');
+
       mm.dataWithAsyncDispose(foo, 'echo', {
         hi: 'no',
       });
