@@ -34,6 +34,11 @@ declare namespace mm {
   function data(mod: any, method: string, data: any, timeout?: number): MockMate;
 
   /**
+   * mock return data with Symbol.asyncDispose method
+   */
+  function dataWithAsyncDispose(mod: any, method: string, data: object, timeout?: number): MockMate;
+
+  /**
    * mock return callback(null, null).
    */
   function empty(mod: any, method: string, timeout?: number): MockMate;

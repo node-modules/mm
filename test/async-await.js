@@ -1,5 +1,3 @@
-'use strict';
-
 const mm = require('..');
 
 describe('test/async-await.test.js', () => {

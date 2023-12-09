@@ -1,5 +1,3 @@
-'use strict';
-
 require('should');
 const os = require('os');
 const path = require('path');
