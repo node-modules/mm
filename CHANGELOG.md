@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/node-modules/mm/compare/v3.3.0...v3.4.0) (2023-12-09)
+
+
+### Features
+
+* support mock.dataWithAsyncDispose() ([#59](https://github.com/node-modules/mm/issues/59)) ([7581288](https://github.com/node-modules/mm/commit/7581288b807a3f1f61bd1027ac0b451f7ddfad0c))
+
 ## [3.3.0](https://github.com/node-modules/mm/compare/v3.2.4...v3.3.0) (2023-05-16)
 
 
