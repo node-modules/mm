@@ -1,6 +1,7 @@
-const mm = require('..');
+import { strict as assert } from 'node:assert';
+import { mm, restore, mockDatas } from '../src/index.js';
 
-describe('test/async-await.test.js', () => {
+describe('test/async-await.test.ts', () => {
   const foo = {
     async request() {
       return 'yes';
@@ -10,7 +11,7 @@ describe('test/async-await.test.js', () => {
     },
   };
 
-  afterEach(mm.restore);
+  afterEach(restore);
 
   describe('mm()', () => {
     it('should mock async function', async () => {
@@ -19,11 +20,11 @@ describe('test/async-await.test.js', () => {
         return 'no';
       });
       datas = await foo.request();
-      datas.should.equal('no');
+      assert.equal(datas, 'no');
 
-      mm.restore();
+      restore();
       datas = await foo.request();
-      datas.should.equal('yes');
+      assert(datas, 'yes');
     });
 
     it('should mock async function to normal throw type error', async () => {
@@ -34,7 +35,8 @@ describe('test/async-await.test.js', () => {
         foo.request();
         throw new Error('should not run this');
       } catch (err) {
-        err.message.should.equal('Can\'t mock async function to normal function for property "request"');
+        assert(err instanceof Error);
+        assert.equal(err.message, 'Can\'t mock async function to normal function for property "request"');
       }
     });
 
@@ -46,7 +48,8 @@ describe('test/async-await.test.js', () => {
         foo.generatorRequest();
         throw new Error('should not run this');
       } catch (err) {
-        err.message.should.equal('Can\'t mock async function to normal function for property "generatorRequest"');
+        assert(err instanceof Error);
+        assert.equal(err.message, 'Can\'t mock async function to normal function for property "generatorRequest"');
       }
     });
 
@@ -58,7 +61,8 @@ describe('test/async-await.test.js', () => {
         foo.request();
         throw new Error('should not run this');
       } catch (err) {
-        err.message.should.equal('should not run this');
+        assert(err instanceof Error);
+        assert.equal(err.message, 'should not run this');
       }
     });
   });
@@ -66,13 +70,13 @@ describe('test/async-await.test.js', () => {
   describe('datas(), data()', () => {
     it('should mock async function', async () => {
       let datas;
-      mm.datas(foo, 'request', 'no');
+      mockDatas(foo, 'request', 'no');
       datas = await foo.request();
-      datas.should.equal('no');
+      assert.equal(datas, 'no');
 
-      mm.restore();
+      restore();
       datas = await foo.request();
-      datas.should.equal('yes');
+      assert.equal(datas, 'yes');
     });
   });
 });

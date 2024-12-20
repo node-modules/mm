@@ -1,6 +1,5 @@
 import { strict as assert } from 'node:assert';
-require('@hazae41/symbol-dispose-polyfill');
-import mm from '../index';
+import * as mm from '../src/index.js';
 
 describe('test/asyncDispose.test.ts', () => {
   const foo = {
