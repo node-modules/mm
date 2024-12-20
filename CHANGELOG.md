@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.0.0](https://github.com/node-modules/mm/compare/v3.4.0...v4.0.0) (2024-12-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop Node.js < 18.19.0 support
+
+part of https://github.com/eggjs/egg/issues/3644
+
+https://github.com/eggjs/egg/issues/5257
+
+### Features
+
+* support cjs and esm both by tshy ([#61](https://github.com/node-modules/mm/issues/61)) ([f1eadcc](https://github.com/node-modules/mm/commit/f1eadcc4a7fbd5263f7e2e98d7747e1df9f5ae40))
+
 ## [3.4.0](https://github.com/node-modules/mm/compare/v3.3.0...v3.4.0) (2023-12-09)
 
 
