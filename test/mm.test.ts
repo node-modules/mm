@@ -1,25 +1,30 @@
-require('should');
-const os = require('os');
-const path = require('path');
-const fs = require('fs');
-const assert = require('assert');
-const http = require('http');
-const https = require('https');
-const child_process = require('child_process');
-const { randomUUID } = require('crypto');
-const pedding = require('pedding');
-const ChunkStream = require('chunkstream');
-const mm = require('../');
-const foo = require('./foo');
+import 'should';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import fs from 'node:fs';
+import assert from 'node:assert';
+import http from 'node:http';
+import https from 'node:https';
+import child_process from 'node:child_process';
+import { randomUUID } from 'node:crypto';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import pedding from 'pedding';
+import mm from '../src/index.js';
+import { foo } from './foo.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe('test/mm.test.js', () => {
-  let port = null;
-  let sslPort = null;
+  let port: any;
+  let sslPort: any;
 
   before(function(done) {
     done = pedding(2, done);
 
-    const app = http.createServer(function(req, res) {
+    const app: any = http.createServer(function(req, res) {
       res.end(req.method + ' ' + req.url);
     });
     app.listen(0, function() {
@@ -28,7 +33,7 @@ describe('test/mm.test.js', () => {
     });
 
     const fixtures = path.join(__dirname, 'fixtures');
-    const appssl = https.createServer({
+    const appssl: any = https.createServer({
       key: fs.readFileSync(path.join(fixtures, 'test_key.pem')),
       cert: fs.readFileSync(path.join(fixtures, 'test_cert.pem')),
     }, function(req, res) {
@@ -102,7 +107,7 @@ describe('test/mm.test.js', () => {
       mm.data(foo, 'get', [ 'b1', 'b2' ]);
       foo.get('q1', function(err, data) {
         assert(!err);
-        data.should.eql([ 'b1', 'b2' ]);
+        assert.deepEqual(data, [ 'b1', 'b2' ]);
         done();
       });
     });
@@ -112,12 +117,12 @@ describe('test/mm.test.js', () => {
       done = pedding(2, done);
       foo.get('q1', function(err, data) {
         assert(!err);
-        data.should.eql([ 'b1', 'b2' ]);
+        assert.deepEqual(data, [ 'b1', 'b2' ]);
         done();
       });
       foo.get('q1', function(err, data) {
         assert(!err);
-        data.should.eql([ 'b1', 'b2' ]);
+        assert.deepEqual(data, [ 'b1', 'b2' ]);
         done();
       });
     });
@@ -200,7 +205,7 @@ describe('test/mm.test.js', () => {
         assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('mm mock error');
-        err.code.should.equal('ENOENT');
+        err.code!.should.equal('ENOENT');
         assert(!data);
         done();
       });
@@ -228,7 +233,7 @@ describe('test/mm.test.js', () => {
         assert(err);
         err.name.should.equal('MockError');
         err.message.should.equal('500ms timeout');
-        err.code.should.equal('ENOENT');
+        err.code!.should.equal('ENOENT');
         assert(!data);
         use.should.above(490);
         done();
@@ -236,7 +241,6 @@ describe('test/mm.test.js', () => {
     });
 
     it.skip('should work for callback is not the last params case', function(done) {
-      const foo = require('./foo');
       done = pedding(3, done);
 
       mm.error(foo, 'get', 'mock foo.get error');
@@ -264,7 +268,6 @@ describe('test/mm.test.js', () => {
     });
 
     it.skip('should throw error', function() {
-      const foo = require('./foo');
       mm.error(foo, 'query', 'mock foo.check error');
       (function() {
         foo.query();
@@ -275,13 +278,11 @@ describe('test/mm.test.js', () => {
 
   describe('syncData, syncEmpty', function() {
     it('should mock data ok', function() {
-      const foo = require('./foo');
       mm.syncData(foo, 'mirror', 'test');
       foo.mirror('input').should.equal('test');
     });
 
     it('should mock empty ok', function() {
-      const foo = require('./foo');
       mm.syncEmpty(foo, 'mirror');
       assert(!foo.mirror('input'));
     });
@@ -289,7 +290,6 @@ describe('test/mm.test.js', () => {
 
   describe('syncError', function() {
     it('should mock error with out error message ok', function() {
-      const foo = require('./foo');
       mm.syncError(foo, 'mirror');
       (function() {
         foo.mirror('input');
@@ -297,7 +297,6 @@ describe('test/mm.test.js', () => {
     });
 
     it('should mock error with string error message ok', function() {
-      const foo = require('./foo');
       mm.syncError(foo, 'mirror', 'mock error');
       (function() {
         foo.mirror('input');
@@ -305,7 +304,6 @@ describe('test/mm.test.js', () => {
     });
 
     it('should mock error with error object ok', function() {
-      const foo = require('./foo');
       mm.syncError(foo, 'mirror', new Error('mock error'));
       (function() {
         foo.mirror('input');
@@ -325,7 +323,7 @@ describe('test/mm.test.js', () => {
         const mockURL = '/foo';
         const mockResData = 'mock data';
         const mockResHeaders = { server: 'mock server' };
-        mm[modName].request(mockURL, mockResData, mockResHeaders);
+        (mm as any)[modName].request(mockURL, mockResData, mockResHeaders);
 
         mod.get({
           host: '127.0.0.1',
@@ -368,7 +366,7 @@ describe('test/mm.test.js', () => {
         const mockURL = /foo$/;
         const mockResData = 'mock data with regex url';
         const mockResHeaders = { server: 'mock server' };
-        mm[modName].request(mockURL, mockResData, mockResHeaders);
+        (mm as any)[modName].request(mockURL, mockResData, mockResHeaders);
 
         done = pedding(2, done);
 
@@ -409,7 +407,7 @@ describe('test/mm.test.js', () => {
         const mockURL = /foo$/;
         const mockResData = [ 'mock data with regex url', '哈哈' ];
         const mockResHeaders = { server: 'mock server' };
-        mm[modName].request(mockURL, mockResData, mockResHeaders, 500);
+        (mm as any)[modName].request(mockURL, mockResData, mockResHeaders, 500);
 
         const start = Date.now();
         mod.get({
@@ -435,7 +433,7 @@ describe('test/mm.test.js', () => {
       it('should mock ' + modName + '.request({url: "/bar/foo"}) 500ms response delay', function(done) {
         const mockResData = [ 'mock data with regex url', '哈哈' ];
         const mockResHeaders = { server: 'mock server' };
-        mm[modName].request({ url: '/bar/foo' }, mockResData, mockResHeaders, 500);
+        (mm as any)[modName].request({ url: '/bar/foo' }, mockResData, mockResHeaders, 500);
 
         const start = Date.now();
         mod.get({
@@ -458,44 +456,17 @@ describe('test/mm.test.js', () => {
         });
       });
 
-      it.skip('should mock ' + modName + '.request({url: "/bar/foo"}) with stream 500ms response delay',
-        function(done) {
-          const mockResData = new ChunkStream([ 'mock data with regex url', '哈哈' ]);
-          const mockResHeaders = { server: 'mock server' };
-          mm[modName].request({ url: '/bar/foo' }, mockResData, mockResHeaders, 500);
-
-          const start = Date.now();
-          mod.get({
-            host: 'npmjs.org',
-            path: '/bar/foo',
-          }, function(res) {
-            res.headers.should.eql(mockResHeaders);
-            res.setEncoding('utf8');
-            let body = '';
-            res.on('data', function(chunk) {
-              chunk.should.be.a.String;
-              body += chunk;
-            });
-            res.on('end', function() {
-              const use = Date.now() - start;
-              body.should.equal([ 'mock data with regex url', '哈哈' ].join(''));
-              use.should.above(490);
-              done();
-            });
-          });
-        });
-
       it('should mock ' + modName + '.request({url: "/bar/foo"}) pipe res work', done => {
         const mockResData = fs.createReadStream(__filename);
         const mockResHeaders = { server: 'mock server', statusCode: 200 };
-        mm[modName].request('', mockResData, mockResHeaders);
+        (mm as any)[modName].request('', mockResData, mockResHeaders);
 
         mod.get({
           host: 'npmjs.org',
           path: '/bar/foo',
         }, onResponse);
 
-        function onResponse(res) {
+        function onResponse(res: any) {
           res.statusCode.should.equal(200);
           res.headers.should.eql({ server: 'mock server' });
 
@@ -511,7 +482,7 @@ describe('test/mm.test.js', () => {
         function(done) {
           const mockResData = fs.createReadStream(__filename);
           const mockResHeaders = { server: 'mock server', statusCode: 201 };
-          mm[modName].request('', mockResData, mockResHeaders);
+          (mm as any)[modName].request('', mockResData, mockResHeaders);
           const length = 5;
           done = pedding(length, done);
           for (let i = 0; i < length; i++) {
@@ -520,12 +491,12 @@ describe('test/mm.test.js', () => {
               path: '/bar/foo',
             }, onResponse);
           }
-          function onResponse(res) {
+          function onResponse(res: any) {
             res.statusCode.should.equal(201);
             res.headers.should.eql({ server: 'mock server' });
             res.setEncoding('utf8');
             let body = '';
-            res.on('data', function(chunk) {
+            res.on('data', function(chunk: string) {
               console.log('data emit: chunk size: %d', chunk.length);
               chunk.should.be.a.String;
               body += chunk;
@@ -543,7 +514,7 @@ describe('test/mm.test.js', () => {
       it('should mock ' + modName + '.request({host: "cnodejs.org"}) 500ms response delay', function(done) {
         const mockResData = [ 'mock data with regex url', '哈哈' ];
         const mockResHeaders = { server: 'mock server' };
-        mm[modName].request({ host: 'cnodejs.org' }, mockResData, mockResHeaders, 500);
+        (mm as any)[modName].request({ host: 'cnodejs.org' }, mockResData, mockResHeaders, 500);
 
         const start = Date.now();
         mod.get({
@@ -569,7 +540,7 @@ describe('test/mm.test.js', () => {
       it('should mock ' + modName + '.request({host: /cnodejs/}) 500ms response delay', function(done) {
         const mockResData = [ 'mock data with regex url', '哈哈' ];
         const mockResHeaders = { server: 'mock server' };
-        mm[modName].request({ host: /cnodejs/ }, mockResData, mockResHeaders, 500);
+        (mm as any)[modName].request({ host: /cnodejs/ }, mockResData, mockResHeaders, 500);
 
         const start = Date.now();
         mod.get({
@@ -596,7 +567,7 @@ describe('test/mm.test.js', () => {
         const mockURL = /foo$/;
         const mockResData = 'mock data with regex url';
         const mockResHeaders = { server: 'mock server' };
-        mm[modName].request(mockURL, mockResData, mockResHeaders, 500);
+        (mm as any)[modName].request(mockURL, mockResData, mockResHeaders, 500);
         done = pedding(2, done);
 
         const start = Date.now();
@@ -628,7 +599,7 @@ describe('test/mm.test.js', () => {
         const mockURL = /foo$/;
         const mockResData = 'mock data with regex url';
         const mockResHeaders = { server: 'mock server' };
-        mm[modName].request(mockURL, mockResData, mockResHeaders, 1000);
+        (mm as any)[modName].request(mockURL, mockResData, mockResHeaders, 1000);
 
         const req = mod.get({
           host: 'cnodejs.org',
@@ -652,14 +623,14 @@ describe('test/mm.test.js', () => {
   describe('http(s).requestError()', function() {
     [ 'http', 'https' ].forEach(function(modName) {
       const mod = modName === 'http' ? http : https;
-      it('should ' + modName + '.reqeust() return req error', function(done) {
+      it('should ' + modName + '.request() return req error', function(done) {
         const modPort = modName === 'http' ? port : sslPort;
 
         done = pedding(2, done);
 
         const mockURL = '/req';
         const reqError = 'mock req error';
-        mm[modName].requestError(mockURL, reqError);
+        (mm as any)[modName].requestError(mockURL, reqError);
 
         let req = mod.get({
           path: '/req',
@@ -696,12 +667,12 @@ describe('test/mm.test.js', () => {
       it('should ' + modName + '.reqeust() return req error after response emit', function(done) {
         const mockURL = '/res';
         const resError = 'mock res error';
-        mm[modName].requestError(mockURL, null, resError);
+        (mm as any)[modName].requestError(mockURL, null, resError);
         done = pedding(2, done);
 
         const req = mod.get({
           path: '/res',
-        }, function(res) {
+        }, function(res: any) {
           res.statusCode.should.eql(200);
           res.headers.server.should.eql('MockMateServer');
           done();
@@ -717,14 +688,14 @@ describe('test/mm.test.js', () => {
       it('should ' + modName + '.reqeust() return res error 500ms delay', function(done) {
         const mockURL = '/res';
         const resError = 'mock res error with 500ms delay';
-        mm[modName].requestError(mockURL, null, resError, 500);
+        (mm as any)[modName].requestError(mockURL, null, resError, 500);
         done = pedding(2, done);
 
         const start = Date.now();
         const req = mod.get({
           path: '/res',
-        }, function(res) {
-          res.statusCode.should.eql(200);
+        }, function(res: any) {
+          res.statusCode!.should.eql(200);
           res.headers.server.should.eql('MockMateServer');
           done();
         });
@@ -741,7 +712,7 @@ describe('test/mm.test.js', () => {
       it('should ' + modName + '.reqeust() not emit req error 1000ms delay after req.abort()', function(done) {
         const mockURL = '/res';
         const resError = 'mock res error with 500ms delay';
-        mm[modName].requestError(mockURL, null, resError, 1000);
+        (mm as any)[modName].requestError(mockURL, null, resError, 1000);
 
         const start = Date.now();
         const req = mod.get({
@@ -780,7 +751,7 @@ describe('test/mm.test.js', () => {
         done();
       });
       ls.on('close', function(code) {
-        code.should.equal(1);
+        code!.should.equal(1);
         done();
       });
       mm.restore();
@@ -797,25 +768,25 @@ describe('test/mm.test.js', () => {
     it('should mock process.env.KEY work', function() {
       const orginalEnv = process.env.NODE_ENV;
       mm(process.env, 'NODE_ENV', 'test2');
-      process.env.NODE_ENV.should.equal('test2');
+      process.env.NODE_ENV!.should.equal('test2');
       mm.restore();
 
       assert(process.env.NODE_ENV === orginalEnv);
 
       mm(process.env, 'NODE_ENV', 'test2');
-      process.env.NODE_ENV.should.equal('test2');
+      process.env.NODE_ENV!.should.equal('test2');
       mm(process.env, 'NODE_ENV', 'production');
-      process.env.NODE_ENV.should.equal('production');
+      process.env.NODE_ENV!.should.equal('production');
       mm.restore();
 
       assert(process.env.NODE_ENV === orginalEnv);
     });
 
     it('should mm() just like muk()', function(done) {
-      mm(fs, 'readFile', function(filename, callback) {
+      mm(fs, 'readFile', function(filename: any, callback: any) {
         process.nextTick(function() {
           const str = 'filename: ' + filename;
-          const buf = Buffer.from ? Buffer.from(str) : new Buffer(str);
+          const buf = Buffer.from ? Buffer.from(str) : Buffer.from(str);
           callback(null, buf);
         });
       });
@@ -861,12 +832,12 @@ describe('test/mm.test.js', () => {
 
     it('shoud mock function with property', () => {
       const NativeDate = Date;
-      const mockNow = function(date) {
-        const NewDate = function(...args) {
+      const mockNow = function(date: any) {
+        const NewDate = function(...args: any[]) {
           if (args.length === 0) {
             return new NativeDate(date);
           }
-          return new NativeDate(...args);
+          return new NativeDate(args[0], args[1], args[2]);
         };
         NewDate.now = function() {
           return new NativeDate(date).getTime();
@@ -892,20 +863,20 @@ describe('test/mm.test.js', () => {
     });
 
     it('should mock HOME env', function() {
-      process.env.HOME.should.equal(this.HOME);
+      process.env.HOME!.should.equal(this.HOME);
       mm(process.env, 'HOME', '/tmp/home');
-      process.env.HOME.should.equal('/tmp/home');
-      process.env.TEST_ENV.should.equal('foo');
+      process.env.HOME!.should.equal('/tmp/home');
+      process.env.TEST_ENV!.should.equal('foo');
     });
 
     it('should mock HOME env to another value', function() {
-      process.env.HOME.should.equal(this.HOME);
+      process.env.HOME!.should.equal(this.HOME);
       mm(process.env, 'HOME', '/tmp/home2');
-      process.env.HOME.should.equal('/tmp/home2');
-      process.env.TEST_ENV.should.equal('foo');
+      process.env.HOME!.should.equal('/tmp/home2');
+      process.env.TEST_ENV!.should.equal('foo');
       mm.restore();
 
-      process.env.HOME.should.equal(this.HOME);
+      process.env.HOME!.should.equal(this.HOME);
 
       assert(!process.env.TEST_ENV);
     });
@@ -918,14 +889,14 @@ describe('test/mm.test.js', () => {
   });
 
   describe('restore', function() {
-    let orgRequest;
+    let orgRequest: any;
     beforeEach(function() {
       orgRequest = http.request;
     });
     afterEach(function() {
       http.request = orgRequest;
     });
-    it('should not alter the http.request function withou http(s) used', function() {
+    it('should not alter the http.request function without http(s) used', function() {
       const obj = {
         foo() {
           return 'original foo';
@@ -944,7 +915,7 @@ describe('test/mm.test.js', () => {
       try {
         http.request({ path: '/foo' }, function() {});
         throw new Error('should not run this');
-      } catch (e) {
+      } catch (e: any) {
         e.message.should.equal('Never want to send request out');
       }
     });
@@ -959,15 +930,15 @@ describe('test/mm.test.js', () => {
         mod.request = function() {
           throw new Error('Never want to send request out');
         };
-        mm[modName].request(mockURLFoo, mockResData, mockResHeaders);
-        mm[modName].request(mockURLBar, mockResData, mockResHeaders);
+        (mm as any)[modName].request(mockURLFoo, mockResData, mockResHeaders);
+        (mm as any)[modName].request(mockURLBar, mockResData, mockResHeaders);
 
         mm.restore();
         try {
           const req = mod.request({ path: '/baz' }, function() {});
           req.end();
           throw new Error('should not run this');
-        } catch (e) {
+        } catch (e: any) {
           e.message.should.equal('Never want to send request out');
         }
       });
@@ -986,7 +957,7 @@ describe('test/mm.test.js', () => {
 
     it('should spy function with data', () => {
       const target = {
-        add(a, b) {
+        add(a: number, b: number) {
           return a + b;
         },
       };
@@ -994,14 +965,14 @@ describe('test/mm.test.js', () => {
       mm.syncData(target, 'add', 3);
       target.add(1, 1).should.equal(3);
       target.add(2, 2).should.equal(3);
-      target.add.called.should.equal(2);
-      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
-      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+      (target.add as any).called.should.equal(2);
+      (target.add as any).calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      (target.add as any).lastCalledArguments.should.eql([ 2, 2 ]);
     });
 
     it('should spy async function with data', async () => {
       const target = {
-        async add(a, b) {
+        async add(a: number, b: number) {
           return a + b;
         },
       };
@@ -1009,89 +980,54 @@ describe('test/mm.test.js', () => {
       mm.data(target, 'add', 3);
       (await target.add(1, 1)).should.equal(3);
       (await target.add(2, 2)).should.equal(3);
-      target.add.called.should.equal(2);
-      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
-      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
-    });
-
-    it('should spy generator function with data', function* () {
-      const target = {
-        * add(a, b) {
-          return a + b;
-        },
-      };
-
-      mm.data(target, 'add', 3);
-      (yield target.add(1, 1)).should.equal(3);
-      (yield target.add(2, 2)).should.equal(3);
-      target.add.called.should.equal(2);
-      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
-      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+      (target.add as any).called.should.equal(2);
+      (target.add as any).calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      (target.add as any).lastCalledArguments.should.eql([ 2, 2 ]);
     });
 
     it('should spy function', () => {
       const target = {
-        add(a, b) {
+        add(a: number, b: number) {
           this.foo();
           return a + b;
         },
         foo() { /* */ },
       };
 
-      mm(target, 'add', function() {
+      mm(target, 'add', function(this: any) {
         this.foo();
         return 3;
       });
       target.add(1, 1).should.equal(3);
       target.add(2, 2).should.equal(3);
-      target.add.called.should.equal(2);
-      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
-      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+      (target.add as any).called.should.equal(2);
+      (target.add as any).calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      (target.add as any).lastCalledArguments.should.eql([ 2, 2 ]);
     });
 
     it('should spy async function', async () => {
       const target = {
-        async add(a, b) {
+        async add(a: number, b: number) {
           await this.foo();
           return a + b;
         },
         async foo() { /* */ },
       };
 
-      mm(target, 'add', async function() {
+      mm(target, 'add', async function(this: any) {
         await this.foo();
         return 3;
       });
       (await target.add(1, 1)).should.equal(3);
       (await target.add(2, 2)).should.equal(3);
-      target.add.called.should.equal(2);
-      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
-      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
-    });
-
-    it('should spy generator function', function* () {
-      const target = {
-        * add(a, b) {
-          yield this.foo();
-          return a + b;
-        },
-        * foo() { /* */ },
-      };
-
-      mm(target, 'add', function* () {
-        yield this.foo();
-        return 3;
-      });
-      (yield target.add(1, 1)).should.equal(3);
-      (yield target.add(2, 2)).should.equal(3);
-      target.add.called.should.equal(2);
-      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
-      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+      (target.add as any).called.should.equal(2);
+      (target.add as any).calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      (target.add as any).lastCalledArguments.should.eql([ 2, 2 ]);
     });
 
     it('should ignore jest.fn()', () => {
       const target = {
-        add(a, b) {
+        add(a: number, b: number) {
           return a + b;
         },
       };
@@ -1109,7 +1045,7 @@ describe('test/mm.test.js', () => {
 
     it('should mm.spy() work', async () => {
       const target = {
-        async add(a, b) {
+        async add(a: number, b: number) {
           await this.foo();
           return a + b;
         },
@@ -1119,30 +1055,26 @@ describe('test/mm.test.js', () => {
       mm.spy(target, 'add');
       (await target.add(1, 1)).should.equal(2);
       (await target.add(2, 2)).should.equal(4);
-      target.add.called.should.equal(2);
-      target.add.calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
-      target.add.lastCalledArguments.should.eql([ 2, 2 ]);
+      (target.add as any).called.should.equal(2);
+      (target.add as any).calledArguments.should.eql([[ 1, 1 ], [ 2, 2 ]]);
+      (target.add as any).lastCalledArguments.should.eql([ 2, 2 ]);
     });
 
     it('should reset spy statistics after restore', () => {
       const target = {
-        add(a, b) {
+        add(a: number, b: number) {
           return a + b;
         },
       };
       mm.spy(target, 'add');
       target.add(1, 1);
-      target.add.called.should.equal(1);
-      target.add.calledArguments.should.eql([[ 1, 1 ]]);
-      target.add.lastCalledArguments.should.eql([ 1, 1 ]);
+      (target.add as any).called.should.equal(1);
+      (target.add as any).calledArguments.should.eql([[ 1, 1 ]]);
+      (target.add as any).lastCalledArguments.should.eql([ 1, 1 ]);
       mm.restore();
-      assert.strictEqual(target.add.called, undefined);
-      assert.strictEqual(target.add.calledArguments, undefined);
-      assert.strictEqual(target.add.lastCalledArguments, undefined);
+      assert.strictEqual((target.add as any).called, undefined);
+      assert.strictEqual((target.add as any).calledArguments, undefined);
+      assert.strictEqual((target.add as any).lastCalledArguments, undefined);
     });
   });
 });
-
-require('./es6');
-require('./thunk');
-require('./async-await');

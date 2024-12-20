@@ -1,14 +1,12 @@
-'use strict';
+import { strict as assert } from 'node:assert';
+import mm from '../src/index.js';
 
-const assert = require('assert');
-const mm = require('..');
-
-describe('test/es6.test.js', () => {
+describe('test/es6.test.ts', () => {
   const foo = {
-    * getMultiValues() {
+    async getMultiValues() {
       return [ 1, 2, 3 ];
     },
-    * getValue() {
+    async getValue() {
       return 1;
     },
   };
@@ -16,24 +14,24 @@ describe('test/es6.test.js', () => {
   afterEach(mm.restore);
 
   describe('datas(), data()', () => {
-    it('should mock generator function', function* () {
+    it('should mock async function', async () => {
       let datas;
       mm.datas(foo, 'getMultiValues', [ 'b1', 'b2', 'b3' ]);
-      datas = yield* foo.getMultiValues();
-      datas.should.eql([ 'b1', 'b2', 'b3' ]);
+      datas = await foo.getMultiValues();
+      assert.deepEqual(datas, [ 'b1', 'b2', 'b3' ]);
 
       mm.datas(foo, 'getMultiValues', 1);
-      datas = yield* foo.getMultiValues();
-      datas.should.equal(1);
+      datas = await foo.getMultiValues();
+      assert.equal(datas, 1);
 
       let data;
       mm.data(foo, 'getValue', 2, 500);
-      data = yield* foo.getValue();
-      data.should.equal(2);
+      data = await foo.getValue();
+      assert.equal(data, 2);
 
       mm.restore();
-      data = yield* foo.getValue();
-      data.should.equal(1);
+      data = await foo.getValue();
+      assert.equal(data, 1);
     });
   });
 
@@ -77,76 +75,77 @@ describe('test/es6.test.js', () => {
   });
 
   describe('error(), errorOnce()', () => {
-    it('should mock error', function* () {
+    it('should mock error', async () => {
       mm.error(foo, 'getValue');
       try {
-        yield foo.getValue();
+        await foo.getValue();
         throw new Error('should not run this');
       } catch (err) {
-        err.message.should.equal('mm mock error');
+        assert(err instanceof Error);
+        assert.equal(err.message, 'mm mock error');
       }
 
-      mm.error(foo, 'getValue', 'foo error', 200);
+      mm.error(foo, 'getValue', 'foo error', { foo: '200' });
       try {
-        yield* foo.getValue();
+        await foo.getValue();
         throw new Error('should not run this');
       } catch (err) {
-        err.message.should.equal('foo error');
+        assert(err instanceof Error);
+        assert.equal(err.message, 'foo error');
       }
 
       mm.error(foo, 'getValue', new Error('new foo error'));
       try {
-        yield* foo.getValue();
+        await foo.getValue();
         throw new Error('should not run this');
-      } catch (err) {
-        err.message.should.equal('new foo error');
+      } catch (err: any) {
+        assert.equal(err.message, 'new foo error');
       }
 
       mm.error(foo, 'getValue', new Error('new foo error'), { status: 500 });
       try {
-        yield* foo.getValue();
+        await foo.getValue();
         throw new Error('should not run this');
-      } catch (err) {
-        err.message.should.equal('new foo error');
-        err.status.should.equal(500);
+      } catch (err: any) {
+        assert.equal(err.message, 'new foo error');
+        assert.equal(err.status, 500);
       }
 
       mm.error(foo, 'getValue', new Error('new foo error'), { status: 500 }, 100);
-      let start;
+      const start = Date.now();
       try {
-        start = Date.now();
-        yield* foo.getValue();
+        await foo.getValue();
         throw new Error('should not run this');
-      } catch (err) {
+      } catch (err: any) {
         const use = Date.now() - start;
-        err.message.should.equal('new foo error');
-        err.status.should.equal(500);
-        use.should.above(90);
+        assert.equal(err.message, 'new foo error');
+        assert.equal(err.status, 500);
+        assert(use > 90);
       }
     });
 
-    it('should mock error once', function* () {
+    it('should mock error once', async () => {
       mm.errorOnce(foo, 'getValue');
       try {
-        yield foo.getValue();
+        await foo.getValue();
         throw new Error('should not run this');
-      } catch (err) {
-        err.message.should.equal('mm mock error');
+      } catch (err: any) {
+        assert.equal(err.message, 'mm mock error');
       }
 
-      const v = yield foo.getValue();
-      v.should.equal(1);
+      const v = await foo.getValue();
+      assert.equal(v, 1);
 
       mm.errorOnce(foo, 'getValue');
       try {
-        yield* foo.getValue();
+        await foo.getValue();
         throw new Error('should not run this');
-      } catch (err) {
-        err.message.should.equal('mm mock error');
+      } catch (err: any) {
+        assert.equal(err.message, 'mm mock error');
       }
 
-      const v1 = yield* foo.getValue();
-      v1.should.equal(1);
+      const v1 = await foo.getValue();
+      assert.equal(v1, 1);
     });
   });
 });
