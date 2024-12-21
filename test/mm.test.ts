@@ -763,15 +763,14 @@ describe('test/mm.test.js', () => {
     });
   });
 
-  describe('mm()', function() {
-
+  describe('mm(), mock()', function() {
     it('should mock process.env.KEY work', function() {
-      const orginalEnv = process.env.NODE_ENV;
+      const originalEnv = process.env.NODE_ENV;
       mm(process.env, 'NODE_ENV', 'test2');
       process.env.NODE_ENV!.should.equal('test2');
       mm.restore();
 
-      assert(process.env.NODE_ENV === orginalEnv);
+      assert(process.env.NODE_ENV === originalEnv);
 
       mm(process.env, 'NODE_ENV', 'test2');
       process.env.NODE_ENV!.should.equal('test2');
@@ -779,7 +778,22 @@ describe('test/mm.test.js', () => {
       process.env.NODE_ENV!.should.equal('production');
       mm.restore();
 
-      assert(process.env.NODE_ENV === orginalEnv);
+      assert(process.env.NODE_ENV === originalEnv);
+    });
+
+    it('should mock Symbol property work', () => {
+      const foo = Symbol('foo');
+      const data = { [foo]: 'bar' };
+      assert.equal(data[foo], 'bar');
+      mm(data, foo, 'bar1');
+      assert.equal(data[foo], 'bar1');
+    });
+
+    it('should mock number property work', () => {
+      const data = { 1: 'bar' };
+      assert.equal(data[1], 'bar');
+      mm(data, 1, 'bar1');
+      assert.equal(data[1], 'bar1');
     });
 
     it('should mm() just like muk()', function(done) {
@@ -830,7 +844,7 @@ describe('test/mm.test.js', () => {
       });
     });
 
-    it('shoud mock function with property', () => {
+    it('should mock function with property', () => {
       const NativeDate = Date;
       const mockNow = function(date: any) {
         const NewDate = function(...args: any[]) {

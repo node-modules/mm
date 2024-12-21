@@ -19,7 +19,7 @@
     "node": ">= 18.19.0"
   },
   "dependencies": {
-    "@cnpmjs/muk-prop": "^1.0.0",
+    "@cnpmjs/muk-prop": "^1.1.0",
     "is-type-of": "^2.2.0",
     "thenify": "^3.3.1"
   },
