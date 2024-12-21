@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/node-modules/mm/compare/v4.0.0...v4.0.1) (2024-12-21)
+
+
+### Bug Fixes
+
+* mock property support symbol ([#62](https://github.com/node-modules/mm/issues/62)) ([a7950f3](https://github.com/node-modules/mm/commit/a7950f37c9085af570068e33c4918e2069d29a54))
+
 ## [4.0.0](https://github.com/node-modules/mm/compare/v3.4.0...v4.0.0) (2024-12-20)
 
 
