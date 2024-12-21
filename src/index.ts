@@ -10,12 +10,12 @@ import is from 'is-type-of';
 // @ts-ignore
 import thenify from 'thenify';
 
-function mock(target: any, property: string, value?: any) {
+function mock(target: any, property: PropertyKey, value?: any) {
   value = spyFunction(target, property, value);
   return muk(target, property, value);
 }
 
-function spyFunction(target: any, property: string, fn: any) {
+function spyFunction(target: any, property: PropertyKey, fn: any) {
   if (!is.function(fn)) return fn;
   // support mock with jest.fn()
   if (fn._isMockFunction && fn.mock) return fn;
@@ -32,14 +32,14 @@ function spyFunction(target: any, property: string, fn: any) {
       fn.called++;
       const res = Reflect.apply(target, thisArg, args);
       if (isAsyncLike && !is.promise(res)) {
-        throw new Error(`Can\'t mock async function to normal function for property "${property}"`);
+        throw new Error(`Can\'t mock async function to normal function for property "${String(property)}"`);
       }
       return res;
     },
   });
 }
 
-function isAsyncLikeFunction(target: any, property: string) {
+function isAsyncLikeFunction(target: any, property: PropertyKey) {
   // don't call getter
   // Object.getOwnPropertyDescriptor can't find getter in prototypes
   if (typeof target.__lookupGetter__ === 'function' && target.__lookupGetter__(property)) return false;
@@ -90,7 +90,7 @@ function _createError(error?: MockError, props?: Record<string, any>): Error {
   return error;
 }
 
-function _mockError(mod: any, method: string, error?: MockError, props?: Record<string, any> | number,
+function _mockError(mod: any, method: string | symbol, error?: MockError, props?: Record<string, any> | number,
   timeout?: number | string, once?: boolean) {
   if (typeof props === 'number') {
     timeout = props;
@@ -140,7 +140,7 @@ function _mockError(mod: any, method: string, error?: MockError, props?: Record<
  * @param {Object} props, error properties
  * @param {Number} timeout, mock async callback timeout, default is 0.
  */
-function mockError(mod: any, method: string, error?: MockError,
+function mockError(mod: any, method: string | symbol, error?: MockError,
   props?: Record<string, any> | number,
   timeout?: number) {
   return _mockError(mod, method, error, props, timeout);
@@ -154,7 +154,7 @@ function mockError(mod: any, method: string, error?: MockError,
  * @param {Object} props, error properties
  * @param {Number} timeout, mock async callback timeout, default is 0.
  */
-function errorOnce(mod: any, method: string, error?: MockError,
+function errorOnce(mod: any, method: string | symbol, error?: MockError,
   props?: Record<string, any> | number,
   timeout?: number) {
   return _mockError(mod, method, error, props, timeout, true);
@@ -168,7 +168,7 @@ function errorOnce(mod: any, method: string, error?: MockError,
  * @param {Array} datas, return datas array.
  * @param {Number} timeout, mock async callback timeout, default is 10.
  */
-function mockDatas(mod: any, method: string, datas: any[] | any, timeout?: number) {
+function mockDatas(mod: any, method: string | symbol, datas: any[] | any, timeout?: number) {
   if (timeout) {
     timeout = parseInt(String(timeout), 10);
   }
@@ -208,7 +208,7 @@ function mockDatas(mod: any, method: string, datas: any[] | any, timeout?: numbe
  * @param {Object} data, return data.
  * @param {Number} timeout, mock async callback timeout, default is 0.
  */
-function mockData(mod: any, method: string, data: any, timeout?: number) {
+function mockData(mod: any, method: string | symbol, data: any, timeout?: number) {
   const isGeneratorFunction = is.generatorFunction(mod[method]);
   const isAsyncFunction = is.asyncFunction(mod[method]);
   if (isGeneratorFunction || isAsyncFunction) {
@@ -217,7 +217,7 @@ function mockData(mod: any, method: string, data: any, timeout?: number) {
   return mockDatas(mod, method, [ data ], timeout);
 }
 
-function dataWithAsyncDispose(mod: any, method: string, data: any, timeout?: number) {
+function dataWithAsyncDispose(mod: any, method: string | symbol, data: any, timeout?: number) {
   data = {
     ...data,
     async [Symbol.asyncDispose]() {
@@ -234,7 +234,7 @@ function dataWithAsyncDispose(mod: any, method: string, data: any, timeout?: num
  * @param {String} method, mock module object method name.
  * @param {Number} [timeout], mock async callback timeout, default is 0.
  */
-function mockEmpty(mod: any, method: string, timeout?: number) {
+function mockEmpty(mod: any, method: string | symbol, timeout?: number) {
   return mockDatas(mod, method, [ null ], timeout);
 }
 
@@ -243,9 +243,9 @@ function mockEmpty(mod: any, method: string, timeout?: number) {
  * @param {Object} mod, module object
  * @param {String} method, mock module object method name.
  */
-function spy(mod: any, method: string) {
+function spy(mod: any, method: string | symbol) {
   if (typeof mod[method] !== 'function') {
-    throw new Error(`spy target ${method} is not a function`);
+    throw new Error(`spy target ${String(method)} is not a function`);
   }
   const originalFn = mod[method];
   const wrap = function proxy(this: any, ...args: any[]) {
@@ -262,7 +262,7 @@ function spy(mod: any, method: string) {
  * @param {String|Error} error, error string message or error instance.
  * @param {Object} [props], error properties
  */
-function syncError(mod: any, method: string, error?: MockError, props?: Record<string, any>) {
+function syncError(mod: any, method: string | symbol, error?: MockError, props?: Record<string, any>) {
   error = _createError(error, props);
   mock(mod, method, () => {
     throw error;
@@ -276,7 +276,7 @@ function syncError(mod: any, method: string, error?: MockError, props?: Record<s
  * @param {String} method, mock module object method name.
  * @param {Object} data, return data.
  */
-function syncData(mod: any, method: string, data?: any) {
+function syncData(mod: any, method: string | symbol, data?: any) {
   mock(mod, method, () => {
     return data;
   });
@@ -288,7 +288,7 @@ function syncData(mod: any, method: string, data?: any) {
  * @param {Object} mod, module object
  * @param {String} method, mock module object method name.
  */
-function syncEmpty(mod: any, method: string) {
+function syncEmpty(mod: any, method: string | symbol) {
   return syncData(mod, method);
 }
 
@@ -581,7 +581,7 @@ function omit(obj: Record<string, any>, key: string) {
 /**
  * mock class method from instance
  */
-function classMethod(instance: any, property: string, value?: any) {
+function classMethod(instance: any, property: PropertyKey, value?: any) {
   mock(instance.constructor.prototype, property, value);
 }
 
