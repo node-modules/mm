@@ -10,7 +10,7 @@ import child_process from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import pedding from 'pedding';
+import { pedding } from 'pedding';
 import mm from '../src/index.js';
 import { foo } from './foo.js';
 

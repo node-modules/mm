@@ -1,5 +1,5 @@
 import { strict as assert } from 'node:assert';
-import { mm, restore, mockDatas } from '../src/index.js';
+import { mm } from '../src/index.js';
 
 describe('test/async-await.test.ts', () => {
   const foo = {
@@ -11,7 +11,7 @@ describe('test/async-await.test.ts', () => {
     },
   };
 
-  afterEach(restore);
+  afterEach(mm.restore);
 
   describe('mm()', () => {
     it('should mock async function', async () => {
@@ -22,7 +22,7 @@ describe('test/async-await.test.ts', () => {
       datas = await foo.request();
       assert.equal(datas, 'no');
 
-      restore();
+      mm.restore();
       datas = await foo.request();
       assert(datas, 'yes');
     });
@@ -70,11 +70,11 @@ describe('test/async-await.test.ts', () => {
   describe('datas(), data()', () => {
     it('should mock async function', async () => {
       let datas;
-      mockDatas(foo, 'request', 'no');
+      mm.mockDatas(foo, 'request', 'no');
       datas = await foo.request();
       assert.equal(datas, 'no');
 
-      restore();
+      mm.restore();
       datas = await foo.request();
       assert.equal(datas, 'yes');
     });
