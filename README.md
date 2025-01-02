@@ -25,7 +25,7 @@ npm install mm --save-dev
 
 ```ts
 import fs from 'node:fs';
-import mm from 'mm';
+import { mm } from 'mm';
 
 mm(fs, 'readFileSync', function(filename) {
   return filename + ' content';
@@ -44,7 +44,7 @@ console.log(fs.readFileSync('《九评 Java》'));
 If mocked property is a function, it will be spied, every time it called, mm will modify `.called`, `.calledArguments` and `.lastCalledArguments`. For example:
 
 ```ts
-import mm from 'mm';
+import { mm } from 'mm';
 
 const target = {
   async add(a, b) {
@@ -68,7 +68,7 @@ assert.deepEqual(target.add.lastCalledArguments, [ 2, 2 ]);
 If you only need spy and don't need mock, you can use `mm.spy` method directly:
 
 ```ts
-import mm from 'mm';
+import { mm } from 'mm';
 
 const target = {
   async add(a, b) {
@@ -96,7 +96,7 @@ assert.deepEqual(target.add.lastCalledArguments, [ 2, 2 ]);
 
 ```ts
 import fs from 'node:fs';
-import mm from 'mm';
+import { mm } from 'mm';
 
 mm.error(fs, 'readFile', 'mock fs.readFile return error');
 
@@ -120,7 +120,7 @@ Just like `mm.error()`, but only mock error once.
 
 ```ts
 import fs from 'node:fs';
-import mm from 'mm';
+import { mm } from 'mm';
 
 mm.errorOnce(fs, 'readFile', 'mock fs.readFile return error');
 
@@ -207,7 +207,7 @@ urllib.request = function (...args, callback) {
 ### .syncError(module, propertyName, errerMessage, errorProperties)
 
 ```js
-var mm = require('mm');
+var { mm } = require('mm');
 var fs = require('fs');
 
 mm.syncError(fs, 'readFileSync', 'mock fs.readFile return error', {code: 'ENOENT'});
@@ -256,7 +256,7 @@ mm.restore();
 ### .http.request(mockUrl, mockResData, mockResHeaders) and .https.request(mockUrl, mockResData, mockResHeaders)
 
 ```js
-var mm = require('mm');
+var { mm } = require('mm');
 var http = require('http');
 
 var mockURL = '/foo';
@@ -297,7 +297,7 @@ https.get({
 ### .http.requestError(mockUrl, reqError, resError) and .https.requestError(mockUrl, reqError, resError)
 
 ```js
-var mm = require('mm');
+var { mm } = require('mm');
 var http = require('http');
 
 var mockURL = '/foo';

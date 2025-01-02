@@ -595,34 +595,7 @@ const mockHttps = {
   requestError: mockHttpsRequestError,
 };
 
-// import { mm, restore } from 'mm';
-export {
-  isMocked,
-  mock,
-  mock as mm,
-  mockDatas as datas,
-  mockDatas,
-  mockData as data,
-  mockData,
-  dataWithAsyncDispose,
-  mockEmpty as empty,
-  mockEmpty,
-  mockError as error,
-  mockError,
-  spy,
-  errorOnce,
-  syncError,
-  syncEmpty,
-  syncData,
-  mockHttp as http,
-  mockHttps as https,
-  spawn,
-  restore,
-  classMethod,
-};
-
-// import mm from 'mm';
-export default Object.assign(mock, {
+const _mock = Object.assign(mock, {
   isMocked,
   mock,
   mm: mock,
@@ -646,4 +619,46 @@ export default Object.assign(mock, {
   restore,
   classMethod,
 });
+
+// import mm from 'mm';
+const proxyMock = new Proxy(_mock, {
+  apply(target, _, args) {
+    return target(args[0], args[1], args[2]);
+  },
+  get(_target, property, receiver) {
+    // import mm from 'mm';
+    // mm.isMocked(foo, 'bar')
+    return Reflect.get(_target, property, receiver);
+  },
+}) as unknown as ((target: any, property: PropertyKey, value?: any) => void) & typeof _mock;
+
+// import mm from 'mm';
+// mm.restore();
+export default proxyMock;
+
+// import { mm, restore } from 'mm';
+export {
+  isMocked,
+  mock,
+  _mock as mm,
+  mockDatas as datas,
+  mockDatas,
+  mockData as data,
+  mockData,
+  dataWithAsyncDispose,
+  mockEmpty as empty,
+  mockEmpty,
+  mockError as error,
+  mockError,
+  spy,
+  errorOnce,
+  syncError,
+  syncEmpty,
+  syncData,
+  mockHttp as http,
+  mockHttps as https,
+  spawn,
+  restore,
+  classMethod,
+};
 
