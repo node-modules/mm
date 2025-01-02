@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/node-modules/mm/compare/v4.0.1...v4.0.2) (2025-01-02)
+
+
+### Bug Fixes
+
+* allow call mm.restore on normal export ([#63](https://github.com/node-modules/mm/issues/63)) ([18f4f7c](https://github.com/node-modules/mm/commit/18f4f7c8c1a01f05b1870cb6e6e058058ee38c81))
+
 ## [4.0.1](https://github.com/node-modules/mm/compare/v4.0.0...v4.0.1) (2024-12-21)
 
 
