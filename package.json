@@ -26,11 +26,11 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.17.1",
     "@eggjs/bin": "7",
+    "@eggjs/oxlint-config": "1",
     "@eggjs/tsconfig": "1",
     "@types/mocha": "10",
     "@types/node": "22",
-    "eslint": "8",
-    "eslint-config-egg": "14",
+    "oxlint": "1",
     "pedding": "^2.0.1",
     "should": "^13.2.3",
     "tshy": "3",
@@ -38,8 +38,8 @@
     "typescript": "5"
   },
   "scripts": {
-    "lint": "eslint --cache src test --ext .ts",
-    "pretest": "npm run lint -- --fix && npm run prepublishOnly",
+    "lint": "oxlint src test",
+    "pretest": "npm run lint && npm run prepublishOnly",
     "test": "egg-bin test",
     "preci": "npm run lint && npm run prepublishOnly && attw --pack",
     "ci": "egg-bin cov",
