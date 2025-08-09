@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "extends": [
+    "./node_modules/@eggjs/oxlint-config/.oxlintrc.json"
+  ],
+  "rules": {
+    "typescript/no-explicit-any": "allow",
+    "typescript/prefer-function-type": "allow",
+    "typescript/no-non-null-assertion": "allow",
+    "typescript/prefer-ts-expect-error": "allow",
+    "typescript/no-inferrable-types": "allow",
+    "typescript/prefer-for-of": "allow",
+    "promise/prefer-await-to-callbacks": "allow",
+    "promise/prefer-await-to-then": "allow",
+    "unicorn/no-array-for-each": "allow",
+    "unicorn/numeric-separators-style": "allow",
+    "unicorn/prefer-global-this": "allow",
+    "unicorn/prefer-date-now": "allow",
+    "unicorn/no-await-expression-member": "allow",
+    "unicorn/consistent-assert": "allow",
+    "unicorn/consistent-function-scoping": "allow",
+    "unicorn/prefer-event-target": "allow",
+    "unicorn/prefer-number-properties": "allow",
+    "unicorn/prefer-type-error": "allow",
+    "import/no-named-as-default": "allow",
+    "import/no-named-as-default-member": "allow",
+    "import/no-unassigned-import": "allow",
+    "jsdoc/check-tag-names": "allow",
+    "require-yield": "allow",
+    "import/no-namespace": "allow",
+    "func-names": "allow",
+    "max-params": "allow",
+    "max-nested-callbacks": "allow",
+    "no-empty-function": "allow",
+    "no-else-return": "allow",
+    "no-lonely-if": "allow",
+    "no-negated-condition": "allow",
+    "no-unused-expressions": "allow",
+    "no-useless-escape": "allow"
+  }
+}
